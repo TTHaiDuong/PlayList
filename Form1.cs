@@ -16,5 +16,10 @@ namespace Playlist
         {
             InitializeComponent();
         }
+
+        private void ClickToChooseFile(object sender, EventArgs e)
+        {
+
+        }
     }
 }
