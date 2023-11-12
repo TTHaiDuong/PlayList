@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PlaylistForm));
             this.LeftSidePanel = new System.Windows.Forms.Panel();
             this.Panel_OpenFileButton = new System.Windows.Forms.Panel();
@@ -43,6 +44,7 @@
             this.SpeakerButton = new System.Windows.Forms.PictureBox();
             this.PreviousSongButton = new System.Windows.Forms.PictureBox();
             this.NextSongButton = new System.Windows.Forms.PictureBox();
+            this.TimerForMusicBar = new System.Windows.Forms.Timer(this.components);
             this.LeftSidePanel.SuspendLayout();
             this.Panel_OpenFileButton.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OpenFileButton)).BeginInit();
@@ -77,8 +79,8 @@
             this.Panel_OpenFileButton.Name = "Panel_OpenFileButton";
             this.Panel_OpenFileButton.Size = new System.Drawing.Size(121, 47);
             this.Panel_OpenFileButton.TabIndex = 4;
-            this.Panel_OpenFileButton.MouseLeave += new System.EventHandler(this.MouseLeaveOpenFileButton);
-            this.Panel_OpenFileButton.MouseHover += new System.EventHandler(this.MouseHoverOpenFileButton);
+            this.Panel_OpenFileButton.MouseLeave += new System.EventHandler(this.MouseLeave_OpenFileButton);
+            this.Panel_OpenFileButton.MouseHover += new System.EventHandler(this.MouseHover_OpenFileButton);
             // 
             // OpenFileButton
             // 
@@ -90,7 +92,7 @@
             this.OpenFileButton.TabIndex = 0;
             this.OpenFileButton.TabStop = false;
             this.OpenFileButton.Click += new System.EventHandler(this.ClickToOpenFile);
-            this.OpenFileButton.MouseHover += new System.EventHandler(this.SelectOpenFileButton);
+            this.OpenFileButton.MouseHover += new System.EventHandler(this.SelectOpen_FileButton);
             // 
             // Panel_IconApp
             // 
@@ -160,8 +162,8 @@
             this.PauseButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.PauseButton.TabIndex = 6;
             this.PauseButton.TabStop = false;
-            this.PauseButton.Click += new System.EventHandler(this.ClickToPause);
             this.PauseButton.Visible = false;
+            this.PauseButton.Click += new System.EventHandler(this.ClickToPause);
             // 
             // MusicTrackBar
             // 
@@ -172,6 +174,7 @@
             this.MusicTrackBar.Size = new System.Drawing.Size(377, 56);
             this.MusicTrackBar.TabIndex = 2;
             this.MusicTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.MusicTrackBar.Scroll += new System.EventHandler(this.MusicTrackbar_Scroll);
             // 
             // SpeakerTrackBar
             // 
@@ -184,8 +187,7 @@
             this.SpeakerTrackBar.TabIndex = 3;
             this.SpeakerTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
             this.SpeakerTrackBar.Value = 100;
-            SpeakerVolumeIs = SpeakerTrackBar.Value;
-            this.SpeakerTrackBar.Scroll += new System.EventHandler(this.VolumeScroll);
+            this.SpeakerTrackBar.Scroll += new System.EventHandler(this.Volume_Scroll);
             // 
             // SpeakerButton
             // 
@@ -197,7 +199,7 @@
             this.SpeakerButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.SpeakerButton.TabIndex = 5;
             this.SpeakerButton.TabStop = false;
-            this.SpeakerButton.Click += new System.EventHandler(this.SpeakerButtonClick);
+            this.SpeakerButton.Click += new System.EventHandler(this.SpeakerButton_Click);
             // 
             // PreviousSongButton
             // 
@@ -220,6 +222,11 @@
             this.NextSongButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.NextSongButton.TabIndex = 2;
             this.NextSongButton.TabStop = false;
+            // 
+            // TimerForMusicBar
+            // 
+            this.TimerForMusicBar.Interval = 1000;
+            this.TimerForMusicBar.Tick += new System.EventHandler(this.MusicBar_TimerTick);
             // 
             // PlaylistForm
             // 
@@ -269,6 +276,7 @@
         private System.Windows.Forms.TrackBar SpeakerTrackBar;
         private System.Windows.Forms.PictureBox PauseButton;
         private System.Windows.Forms.Label VolumePercent;
+        private System.Windows.Forms.Timer TimerForMusicBar;
     }
 }
 
