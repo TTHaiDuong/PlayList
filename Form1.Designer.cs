@@ -1,6 +1,6 @@
 ﻿namespace Playlist
 {
-    partial class Form1
+    partial class PlaylistForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,198 +28,247 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.pictureBox5 = new System.Windows.Forms.PictureBox();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.pictureBox6 = new System.Windows.Forms.PictureBox();
-            this.progressBar2 = new System.Windows.Forms.ProgressBar();
-            this.panel1.SuspendLayout();
-            this.panel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PlaylistForm));
+            this.LeftSidePanel = new System.Windows.Forms.Panel();
+            this.Panel_OpenFileButton = new System.Windows.Forms.Panel();
+            this.OpenFileButton = new System.Windows.Forms.PictureBox();
+            this.Panel_IconApp = new System.Windows.Forms.Panel();
+            this.IconApp = new System.Windows.Forms.PictureBox();
+            this.PlayButton = new System.Windows.Forms.PictureBox();
+            this.PlayPanel = new System.Windows.Forms.Panel();
+            this.VolumePercent = new System.Windows.Forms.Label();
+            this.PauseButton = new System.Windows.Forms.PictureBox();
+            this.MusicTrackBar = new System.Windows.Forms.TrackBar();
+            this.SpeakerTrackBar = new System.Windows.Forms.TrackBar();
+            this.SpeakerButton = new System.Windows.Forms.PictureBox();
+            this.PreviousSongButton = new System.Windows.Forms.PictureBox();
+            this.NextSongButton = new System.Windows.Forms.PictureBox();
+            this.LeftSidePanel.SuspendLayout();
+            this.Panel_OpenFileButton.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.OpenFileButton)).BeginInit();
+            this.Panel_IconApp.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.IconApp)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PlayButton)).BeginInit();
+            this.PlayPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PauseButton)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MusicTrackBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SpeakerTrackBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SpeakerButton)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PreviousSongButton)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NextSongButton)).BeginInit();
             this.SuspendLayout();
             // 
-            // panel1
+            // LeftSidePanel
             // 
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(30)))), ((int)(((byte)(54)))));
-            this.panel1.Controls.Add(this.panel4);
-            this.panel1.Controls.Add(this.panel2);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(121, 577);
-            this.panel1.TabIndex = 0;
+            this.LeftSidePanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(12)))), ((int)(((byte)(14)))));
+            this.LeftSidePanel.Controls.Add(this.Panel_OpenFileButton);
+            this.LeftSidePanel.Controls.Add(this.Panel_IconApp);
+            this.LeftSidePanel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.LeftSidePanel.Location = new System.Drawing.Point(0, 0);
+            this.LeftSidePanel.Name = "LeftSidePanel";
+            this.LeftSidePanel.Size = new System.Drawing.Size(121, 577);
+            this.LeftSidePanel.TabIndex = 0;
             // 
-            // panel4
+            // Panel_OpenFileButton
             // 
-            this.panel4.Controls.Add(this.pictureBox3);
-            this.panel4.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.panel4.Location = new System.Drawing.Point(0, 205);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(121, 47);
-            this.panel4.TabIndex = 4;
+            this.Panel_OpenFileButton.Controls.Add(this.OpenFileButton);
+            this.Panel_OpenFileButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Panel_OpenFileButton.Location = new System.Drawing.Point(0, 205);
+            this.Panel_OpenFileButton.Name = "Panel_OpenFileButton";
+            this.Panel_OpenFileButton.Size = new System.Drawing.Size(121, 47);
+            this.Panel_OpenFileButton.TabIndex = 4;
+            this.Panel_OpenFileButton.MouseLeave += new System.EventHandler(this.MouseLeaveOpenFileButton);
+            this.Panel_OpenFileButton.MouseHover += new System.EventHandler(this.MouseHoverOpenFileButton);
             // 
-            // pictureBox3
+            // OpenFileButton
             // 
-            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(43, 3);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(37, 37);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox3.TabIndex = 0;
-            this.pictureBox3.TabStop = false;
+            this.OpenFileButton.Image = ((System.Drawing.Image)(resources.GetObject("OpenFileButton.Image")));
+            this.OpenFileButton.Location = new System.Drawing.Point(40, 3);
+            this.OpenFileButton.Name = "OpenFileButton";
+            this.OpenFileButton.Size = new System.Drawing.Size(37, 37);
+            this.OpenFileButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.OpenFileButton.TabIndex = 0;
+            this.OpenFileButton.TabStop = false;
+            this.OpenFileButton.Click += new System.EventHandler(this.ClickToOpenFile);
+            this.OpenFileButton.MouseHover += new System.EventHandler(this.SelectOpenFileButton);
             // 
-            // panel2
+            // Panel_IconApp
             // 
-            this.panel2.Controls.Add(this.pictureBox2);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel2.Location = new System.Drawing.Point(0, 0);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(121, 144);
-            this.panel2.TabIndex = 2;
+            this.Panel_IconApp.Controls.Add(this.IconApp);
+            this.Panel_IconApp.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Panel_IconApp.Location = new System.Drawing.Point(0, 0);
+            this.Panel_IconApp.Name = "Panel_IconApp";
+            this.Panel_IconApp.Size = new System.Drawing.Size(121, 144);
+            this.Panel_IconApp.TabIndex = 2;
             // 
-            // pictureBox2
+            // IconApp
             // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(21, 25);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(83, 58);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 0;
-            this.pictureBox2.TabStop = false;
+            this.IconApp.Image = ((System.Drawing.Image)(resources.GetObject("IconApp.Image")));
+            this.IconApp.Location = new System.Drawing.Point(21, 25);
+            this.IconApp.Name = "IconApp";
+            this.IconApp.Size = new System.Drawing.Size(83, 58);
+            this.IconApp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.IconApp.TabIndex = 0;
+            this.IconApp.TabStop = false;
             // 
-            // pictureBox1
+            // PlayButton
             // 
-            this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(466, 14);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(30, 30);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 1;
-            this.pictureBox1.TabStop = false;
+            this.PlayButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.PlayButton.Image = ((System.Drawing.Image)(resources.GetObject("PlayButton.Image")));
+            this.PlayButton.Location = new System.Drawing.Point(466, 14);
+            this.PlayButton.Name = "PlayButton";
+            this.PlayButton.Size = new System.Drawing.Size(30, 30);
+            this.PlayButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.PlayButton.TabIndex = 1;
+            this.PlayButton.TabStop = false;
+            this.PlayButton.Click += new System.EventHandler(this.ClickToPlay);
             // 
-            // panel3
+            // PlayPanel
             // 
-            this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(30)))), ((int)(((byte)(54)))));
-            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel3.Controls.Add(this.progressBar2);
-            this.panel3.Controls.Add(this.pictureBox6);
-            this.panel3.Controls.Add(this.progressBar1);
-            this.panel3.Controls.Add(this.pictureBox5);
-            this.panel3.Controls.Add(this.pictureBox4);
-            this.panel3.Controls.Add(this.pictureBox1);
-            this.panel3.Location = new System.Drawing.Point(-16, 463);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(977, 127);
-            this.panel3.TabIndex = 1;
+            this.PlayPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(4)))), ((int)(((byte)(12)))), ((int)(((byte)(14)))));
+            this.PlayPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PlayPanel.Controls.Add(this.VolumePercent);
+            this.PlayPanel.Controls.Add(this.PauseButton);
+            this.PlayPanel.Controls.Add(this.MusicTrackBar);
+            this.PlayPanel.Controls.Add(this.SpeakerTrackBar);
+            this.PlayPanel.Controls.Add(this.SpeakerButton);
+            this.PlayPanel.Controls.Add(this.PreviousSongButton);
+            this.PlayPanel.Controls.Add(this.NextSongButton);
+            this.PlayPanel.Controls.Add(this.PlayButton);
+            this.PlayPanel.Location = new System.Drawing.Point(-16, 463);
+            this.PlayPanel.Name = "PlayPanel";
+            this.PlayPanel.Size = new System.Drawing.Size(977, 127);
+            this.PlayPanel.TabIndex = 1;
             // 
-            // progressBar1
+            // VolumePercent
             // 
-            this.progressBar1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.progressBar1.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.progressBar1.Location = new System.Drawing.Point(317, 73);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(323, 5);
-            this.progressBar1.TabIndex = 4;
+            this.VolumePercent.AutoSize = true;
+            this.VolumePercent.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.VolumePercent.Location = new System.Drawing.Point(887, 57);
+            this.VolumePercent.Name = "VolumePercent";
+            this.VolumePercent.Size = new System.Drawing.Size(28, 16);
+            this.VolumePercent.TabIndex = 7;
+            this.VolumePercent.Text = "100";
             // 
-            // pictureBox5
+            // PauseButton
             // 
-            this.pictureBox5.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox5.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox5.Image")));
-            this.pictureBox5.Location = new System.Drawing.Point(399, 14);
-            this.pictureBox5.Name = "pictureBox5";
-            this.pictureBox5.Size = new System.Drawing.Size(30, 30);
-            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox5.TabIndex = 3;
-            this.pictureBox5.TabStop = false;
+            this.PauseButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.PauseButton.Image = ((System.Drawing.Image)(resources.GetObject("PauseButton.Image")));
+            this.PauseButton.Location = new System.Drawing.Point(466, 14);
+            this.PauseButton.Name = "PauseButton";
+            this.PauseButton.Size = new System.Drawing.Size(30, 30);
+            this.PauseButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.PauseButton.TabIndex = 6;
+            this.PauseButton.TabStop = false;
+            this.PauseButton.Click += new System.EventHandler(this.ClickToPause);
+            this.PauseButton.Visible = false;
             // 
-            // pictureBox4
+            // MusicTrackBar
             // 
-            this.pictureBox4.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
-            this.pictureBox4.Location = new System.Drawing.Point(532, 14);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(30, 30);
-            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox4.TabIndex = 2;
-            this.pictureBox4.TabStop = false;
+            this.MusicTrackBar.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.MusicTrackBar.Location = new System.Drawing.Point(291, 57);
+            this.MusicTrackBar.Name = "MusicTrackBar";
+            this.MusicTrackBar.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.MusicTrackBar.Size = new System.Drawing.Size(377, 56);
+            this.MusicTrackBar.TabIndex = 2;
+            this.MusicTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
             // 
-            // pictureBox6
+            // SpeakerTrackBar
             // 
-            this.pictureBox6.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox6.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox6.Image")));
-            this.pictureBox6.Location = new System.Drawing.Point(741, 60);
-            this.pictureBox6.Name = "pictureBox6";
-            this.pictureBox6.Size = new System.Drawing.Size(30, 30);
-            this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox6.TabIndex = 5;
-            this.pictureBox6.TabStop = false;
+            this.SpeakerTrackBar.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.SpeakerTrackBar.LargeChange = 15;
+            this.SpeakerTrackBar.Location = new System.Drawing.Point(777, 49);
+            this.SpeakerTrackBar.Maximum = 100;
+            this.SpeakerTrackBar.Name = "SpeakerTrackBar";
+            this.SpeakerTrackBar.Size = new System.Drawing.Size(113, 56);
+            this.SpeakerTrackBar.TabIndex = 3;
+            this.SpeakerTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.SpeakerTrackBar.Value = 100;
+            SpeakerVolumeIs = SpeakerTrackBar.Value;
+            this.SpeakerTrackBar.Scroll += new System.EventHandler(this.VolumeScroll);
             // 
-            // progressBar2
+            // SpeakerButton
             // 
-            this.progressBar2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.progressBar2.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.progressBar2.Location = new System.Drawing.Point(791, 73);
-            this.progressBar2.Name = "progressBar2";
-            this.progressBar2.Size = new System.Drawing.Size(110, 5);
-            this.progressBar2.TabIndex = 6;
+            this.SpeakerButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.SpeakerButton.Image = ((System.Drawing.Image)(resources.GetObject("SpeakerButton.Image")));
+            this.SpeakerButton.Location = new System.Drawing.Point(741, 49);
+            this.SpeakerButton.Name = "SpeakerButton";
+            this.SpeakerButton.Size = new System.Drawing.Size(30, 30);
+            this.SpeakerButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.SpeakerButton.TabIndex = 5;
+            this.SpeakerButton.TabStop = false;
+            this.SpeakerButton.Click += new System.EventHandler(this.SpeakerButtonClick);
             // 
-            // Form1
+            // PreviousSongButton
+            // 
+            this.PreviousSongButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.PreviousSongButton.Image = ((System.Drawing.Image)(resources.GetObject("PreviousSongButton.Image")));
+            this.PreviousSongButton.Location = new System.Drawing.Point(399, 14);
+            this.PreviousSongButton.Name = "PreviousSongButton";
+            this.PreviousSongButton.Size = new System.Drawing.Size(30, 30);
+            this.PreviousSongButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.PreviousSongButton.TabIndex = 3;
+            this.PreviousSongButton.TabStop = false;
+            // 
+            // NextSongButton
+            // 
+            this.NextSongButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.NextSongButton.Image = ((System.Drawing.Image)(resources.GetObject("NextSongButton.Image")));
+            this.NextSongButton.Location = new System.Drawing.Point(532, 14);
+            this.NextSongButton.Name = "NextSongButton";
+            this.NextSongButton.Size = new System.Drawing.Size(30, 30);
+            this.NextSongButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.NextSongButton.TabIndex = 2;
+            this.NextSongButton.TabStop = false;
+            // 
+            // PlaylistForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(51)))), ((int)(((byte)(73)))));
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(14)))), ((int)(((byte)(14)))));
             this.ClientSize = new System.Drawing.Size(951, 577);
-            this.Controls.Add(this.panel3);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.PlayPanel);
+            this.Controls.Add(this.LeftSidePanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximumSize = new System.Drawing.Size(969, 624);
-            this.Name = "Form1";
+            this.Name = "PlaylistForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
-            this.panel1.ResumeLayout(false);
-            this.panel4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            this.panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.panel3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
+            this.LeftSidePanel.ResumeLayout(false);
+            this.Panel_OpenFileButton.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.OpenFileButton)).EndInit();
+            this.Panel_IconApp.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.IconApp)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PlayButton)).EndInit();
+            this.PlayPanel.ResumeLayout(false);
+            this.PlayPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PauseButton)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MusicTrackBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SpeakerTrackBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SpeakerButton)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PreviousSongButton)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NextSongButton)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.PictureBox pictureBox3;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.PictureBox pictureBox5;
-        private System.Windows.Forms.PictureBox pictureBox4;
-        private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.ProgressBar progressBar2;
-        private System.Windows.Forms.PictureBox pictureBox6;
+        private System.Windows.Forms.Panel LeftSidePanel;
+        private System.Windows.Forms.Panel Panel_IconApp;
+        private System.Windows.Forms.PictureBox IconApp;
+        private System.Windows.Forms.Panel Panel_OpenFileButton;
+        private System.Windows.Forms.PictureBox OpenFileButton;
+        private System.Windows.Forms.PictureBox PlayButton;
+        private System.Windows.Forms.Panel PlayPanel;
+        private System.Windows.Forms.PictureBox PreviousSongButton;
+        private System.Windows.Forms.PictureBox NextSongButton;
+        private System.Windows.Forms.PictureBox SpeakerButton;
+        private System.Windows.Forms.TrackBar MusicTrackBar;
+        private System.Windows.Forms.TrackBar SpeakerTrackBar;
+        private System.Windows.Forms.PictureBox PauseButton;
+        private System.Windows.Forms.Label VolumePercent;
     }
 }
 
