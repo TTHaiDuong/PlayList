@@ -33,7 +33,7 @@ namespace Playlist
     public class DoublyLinkedList : IEnumerable
     {
         public Node Head, Tail; // Đầu và đuôi của List
-        public int Count; // Số lượng phần tử trong List
+        public int Count { get; private set; }
         public DoublyLinkedList(object Value) { Add(Value); }
         public DoublyLinkedList() { this.Head = null; this.Tail = null; this.Count = 0; }
 
@@ -56,6 +56,10 @@ namespace Playlist
             }
 
             return List;
+        }
+        public string[] ToArray_String()
+        {
+            return this.ToList().Select(obj => obj.ToString()).ToArray();
         }
 
         // Cho phép Doubly Linked List sử dụng vòng lặp foreach, Enumeration

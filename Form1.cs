@@ -10,154 +10,253 @@ using System.Windows.Forms;
 using NAudio.Wave;
 using System.IO;
 using NAudio.Gui;
+using System.Security.AccessControl;
 
 namespace Playlist
 {
     public partial class PlaylistForm : Form
     {
+        // Khởi tạo khi mở App
         public PlaylistForm()
         {
             InitializeComponent();
-        }
 
-        #region Các thuộc tính điều kiển
-
-        OpenFileDialog OpenFile; // Dùng để mở file
-        DoublyLinkedList PathOfFiles = new DoublyLinkedList(); // Lưu đường dẫn của các file khi được lấy từ OpenFileDialog
-
-        IWavePlayer PlayerDevice; // Thiết bị dùng để điều khiển file âm thanh đang phát
-        AudioFileReader PlayCurrentFile; // Đọc file
-
-        int ChooseMusic = 0; // Số thứ tự của bài hát trong list, chọn để chơi
-
-        bool Repeating = false; // Lặp lại bài hát hiện tại khi đã phát xong
-
-        int SpeakerVolumeIs = 100; // Sử dụng để đặt lại giá trị của loa khi nhấn lần thứ hai
-
-        WaveViewer WaveViewer = new WaveViewer();
-
-        #endregion
-
-        // Mở OpenFileDialog khi nhấn vào nút Open
-        private void OpenFile_Click(object sender, EventArgs e)
-        {
-            // Tạo và đặt thuộc tính cho OpenFileDialog
-            OpenFile = new OpenFileDialog();
-            OpenFile.Filter = "MP3 Files (*.mp3)|*.mp3"; // Lọc những file có định dạng MP3
-            OpenFile.FilterIndex = 1;
-            OpenFile.Multiselect = true;
-            OpenFile.Title = "Open";
+            // Đặt các thuộc tính điều khiển
+            PlayerDevice = new WaveOut();
+            AutoNext = true;
+            Repeating = false;
+            VolumeWas = 1;
+            MusicBar.Value = 0;
+            SpeakerBar.Value = 100;
 
             // Tải lại những bài hát đã được up lên app
-            File.WriteAllText("MusicList", "");
+            File.AppendAllText("MusicList", "");
             PathOfFiles = DoublyLinkedList.FromArray(File.ReadAllLines("MusicList"));
+            CurrentFile = PathOfFiles.Head;
 
-            // Add những file vào trong list
-            if (OpenFile.ShowDialog() == DialogResult.OK)
-                PathOfFiles.AddRange(OpenFile.FileNames);
+            if (CurrentFile.Value.ToString() != null)
+            StartMusic(CurrentFile.Value.ToString());
 
-            DoublyLinkedList DisplayList = new DoublyLinkedList();
+            Pause_Click(new object(), new EventArgs());
 
-            foreach (string Current in PathOfFiles)
-            {
-                MusicList.Controls.Add(new Label() { Text = Current });
-            }
-
-            // Lưu lại những bài hát được up lên app
-            File.WriteAllLines("MusicList", PathOfFiles.ToList().Select(obj => obj.ToString()).ToArray());
+            EditPlaylist();
         }
 
+        #region Các thuộc tính điều khiển
+        DoublyLinkedList PathOfFiles; // Lưu đường dẫn của các file
+        Node CurrentFile; // Lấy đường dẫn của file phát nhạc hiện tại
+        IWavePlayer PlayerDevice; // Thiết bị dùng để điều khiển file âm thanh đang phát
+        AudioFileReader PlayCurrentFile; // Đọc file
+        bool Repeating; // Lặp lại bài hát hiện tại khi đã phát xong
+        bool AutoNext; // Tự động phát bài tiếp theo khi đã phát xong
+        double VolumeWas; // Sử dụng để đặt lại giá trị của loa khi nhấn lần thứ hai
+        #endregion
+
+        #region Bộ điều khiển quá trình phát nhạc
         // Xử lý sự kiện khi nhấn nút Play
         private void Play_Click(object sender, EventArgs e)
         {
-            // Thay đổi hình ảnh, từ nút Play sang hình nút Pause
             PlayButton.Visible = false;
             PauseButton.Visible = true;
 
-            if (PlayCurrentFile == null && PathOfFiles.Count != 0)
-            {
-                if (PathOfFiles[0] == null) Console.Beep(500, 100);
-
-                PlayerDevice = new WaveOut();
-                PlayCurrentFile = new AudioFileReader(PathOfFiles[0].ToString());
-
-                MusicTrackBar.Maximum = Convert.ToInt32(PlayCurrentFile.TotalTime.TotalSeconds);
-                MusicTrackBar.Value = 0;
-                PlayerDevice.Volume = 1;
-            }
-            if (PlayCurrentFile != null) TimerForMusicBar.Start();
-            PlayerDevice.Init(PlayCurrentFile);
+            TimerMusicBar.Start();
             PlayerDevice.Play();
-
-            WaveViewer.WaveStream = PlayCurrentFile;
         }
-
         // Xử lý sự kiện khi nhấn Pause
         private void Pause_Click(object sender, EventArgs e)
         {
             PlayButton.Visible = true;
             PauseButton.Visible = false;
+
             PlayerDevice.Pause();
-            TimerForMusicBar.Stop();
+            TimerMusicBar.Stop();
         }
 
-        // Xử lý các sự kiện của loa
-        private void Volume_Scroll(object sender, EventArgs e)
+        // Xử lý sự kiện khi cuộn thanh âm lượng
+        private void SpeakerBar_Scroll(object sender, EventArgs e)
         {
-            VolumePercent.Text = SpeakerTrackBar.Value.ToString();
-            SpeakerVolumeIs = SpeakerTrackBar.Value;
+            VolumeWas = SpeakerBar.Value;
 
             if (PlayerDevice != null)
-            PlayerDevice.Volume = (float)SpeakerTrackBar.Value / 100;
+                PlayerDevice.Volume = (float)SpeakerBar.Value / 100;
         }
+        // Xử lý sự kiện khi nhấn nút loa
         private void Speaker_Click(object sender, EventArgs e)
         {
-            SpeakerTrackBar.Value = SpeakerTrackBar.Value != 0 ? 0 : SpeakerVolumeIs;
-            VolumePercent.Text = SpeakerTrackBar.Value.ToString();
+            SpeakerBar.Value = (int)(SpeakerBar.Value != 0 ? 0 : VolumeWas);
 
             if (PlayerDevice != null)
-            PlayerDevice.Volume = (float)SpeakerTrackBar.Value / 100;
+                PlayerDevice.Volume = (float)SpeakerBar.Value / 100;
         }
 
         // Đồng hồ, để dịch chuyển thanh Trackbar theo đúng vị trí phát của đoạn nhạc
         private void MusicBar_TimerTick(object sender, EventArgs e)
         {
-            if (MusicTrackBar.Value >= PlayCurrentFile.TotalTime.TotalSeconds - 1)
-            {
-                if (Repeating)
-                {
-                    MusicTrackBar.Value = 0;
-                    PlayCurrentFile.CurrentTime = TimeSpan.Zero;
-                    PlayerDevice.Play();
-                }
-                else
-                    TimerForMusicBar.Stop();
-            }
+            if (MusicBar.Value == MusicBar.Maximum)
+                EndMusic();
             else
-                MusicTrackBar.Value++;
+                MusicBar.Value++;
         }
         private void MusicBar_Scroll(object sender, EventArgs e)
         {
-            PlayCurrentFile.CurrentTime = TimeSpan.FromSeconds(MusicTrackBar.Value);
+            PlayCurrentFile.CurrentTime = TimeSpan.FromSeconds(MusicBar.Value);
         }
-
 
         // Xử lý khi bấm next video
-        private void NextVideo_Click(object sender, EventArgs e)
+        private void Next_Click(object sender, EventArgs e)
         {
-            ChooseMusic++;
-            if (ChooseMusic >= PathOfFiles.Count) ChooseMusic = 0;
+            if (CurrentFile != PathOfFiles.Tail)
+                CurrentFile = CurrentFile.Next;
+            else
+                CurrentFile = PathOfFiles.Head;
+
+            StartMusic(CurrentFile.Value.ToString());
         }
+
         // Xử lý khi bấm previous video
-        private void PreviousMusic_Click(object sender, EventArgs e)
+        private void Previous_Click(object sender, EventArgs e)
         {
-            ChooseMusic--;
-            if (ChooseMusic <= 0) ChooseMusic = PathOfFiles.Count - 1;
+            if (CurrentFile != PathOfFiles.Head)
+                CurrentFile = CurrentFile.Previous;
+            else
+                CurrentFile = PathOfFiles.Tail;
+
+            StartMusic(CurrentFile.Value.ToString());
         }
 
         private void Repeating_Click(object sender, EventArgs e)
         {
-            Repeating = Repeating == true ? false : true;
+            Repeating = Repeating ? false : true;
+            AutoNext = false;
         }
+
+        private void AutoNext_Click(object sender, EventArgs e)
+        {
+            AutoNext = AutoNext ? false : true;
+            Repeating = false;
+        }
+        #endregion
+
+        #region Control phía bên trái
+        // Mở OpenFileDialog khi nhấn vào nút Open
+        private void OpenFile_Click(object sender, EventArgs e)
+        {
+            // Thiết đặt thuộc tính cho hộp thoại Open File
+            OpenFileDialog OpenFile = new OpenFileDialog()
+            {
+                Filter = "MP3 Files (*.mp3)|*.mp3",
+                FilterIndex = 1,
+                Multiselect = true,
+                Title = "Open"
+            };
+
+            // Add những file vào trong list
+            if (OpenFile.ShowDialog() == DialogResult.OK)
+                PathOfFiles.AddRange(OpenFile.FileNames);
+
+            EditPlaylist();
+
+            // Lưu lại những bài hát được up lên app
+            File.WriteAllLines("MusicList", PathOfFiles.ToArray_String());
+        }
+        #endregion
+
+        #region Xử lý khi bắt đầu, kết thúc đoạn nhạc
+        // Xử lý khi bắt đầu phát nhạc mới
+        private void StartMusic(string File)
+        {
+            PlayerDevice.Dispose();
+            PlayerDevice = new WaveOut();
+            PlayCurrentFile = new AudioFileReader(CurrentFile.Value.ToString());
+            PlayerDevice.Init(PlayCurrentFile);
+            PlayCurrentFile.CurrentTime = TimeSpan.Zero;
+            MusicBar.Maximum = (int)PlayCurrentFile.TotalTime.TotalSeconds;
+            MusicBar.Value = 0;
+
+            Play_Click(new object(), new EventArgs());
+        }
+        // Xử lý khi đã phát hết nhạc
+        private void EndMusic()
+        {
+            Pause_Click(new object(), new EventArgs());
+
+            if (Repeating)
+                StartMusic(CurrentFile.Value.ToString());
+
+            if (AutoNext && CurrentFile != PathOfFiles.Tail)
+            {
+                CurrentFile = CurrentFile.Next;
+                StartMusic(CurrentFile.Value.ToString());
+            }
+        }
+        #endregion
+
+        #region Xử lý, hiển thị danh sách các bài hát
+        private void EditPlaylist()
+        {
+            MusicList.Controls.Clear();
+
+            int i = 0;
+            foreach (string Current in PathOfFiles)
+            {
+                i++;
+                Panel Music = new Panel();
+                Music.AutoSize = true;
+                Label MusicName = new Label();
+                MusicName.Text = Path.GetFileName(Current).Replace(".mp3", "");
+                MusicName.Font = new Font("Roboto", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                MusicName.ForeColor = Color.White;
+                MusicName.AutoSize = false;
+                MusicName.Size = new Size(400, 50);
+                MusicName.Cursor = Cursors.Hand;
+                MusicName.TextAlign = ContentAlignment.MiddleLeft;
+                MusicName.Click += NameMusic_Click;
+                MusicList.Controls.Add(MusicName);
+                MusicList.BringToFront();
+            }
+            PlayPanel.BringToFront();
+            Profile.BringToFront();
+        }
+
+        // Xử lý sự kiện khi lăn chuột trên MusicList
+        private void MusicList_Wheel(object sender, MouseEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                MusicList.Location = new Point(MusicList.Location.X, MusicList.Location.Y + 10);
+            }
+            if (e.Delta < 0)
+            {
+                MusicList.Location = new Point(MusicList.Location.X, MusicList.Location.Y - 10);
+            }
+        }
+
+        // Xử lý sự kiện khi nhấn vào tên bài hát ở danh sách bài hát
+        private void NameMusic_Click(object sender, EventArgs e)
+        {
+            Label Current = sender as Label;
+            if (Current.Text != null)
+            {
+                PlayCurrentFile = new AudioFileReader(Array.Find(PathOfFiles.ToArray_String(), find => Path.GetFileName(find) == Current.Text + ".mp3"));
+                this.Controls.Add(new Label() { ForeColor = Color.White, Text = PlayCurrentFile.FileName });
+
+                PlayerDevice.Dispose();
+                PlayerDevice = new WaveOut();
+                PlayerDevice.Init(PlayCurrentFile);
+
+                MusicBar.Maximum = (int)PlayCurrentFile.TotalTime.TotalSeconds;
+                MusicBar.Value = 0;
+                PlayerDevice.Play();
+
+                TimerMusicBar.Start();
+
+                PlayButton.Visible = false;
+                PauseButton.Visible = true;
+            }
+        }
+        #endregion
+
+        #region Tìm kiếm bài hát
+        #endregion
     }
 }
