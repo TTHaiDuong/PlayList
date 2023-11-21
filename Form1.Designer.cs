@@ -50,9 +50,10 @@ namespace Playlist
             this.NextButton = new System.Windows.Forms.PictureBox();
             this.PlayButton = new System.Windows.Forms.PictureBox();
             this.MusicBar = new System.Windows.Forms.TrackBar();
-            this.Profile = new System.Windows.Forms.Panel();
+            this.Account = new System.Windows.Forms.Panel();
             this.CoverImage = new System.Windows.Forms.PictureBox();
             this.MusicList = new System.Windows.Forms.FlowLayoutPanel();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.LeftSidePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.IconApp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SearchButton)).BeginInit();
@@ -67,7 +68,7 @@ namespace Playlist
             ((System.ComponentModel.ISupportInitialize)(this.NextButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PlayButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MusicBar)).BeginInit();
-            this.Profile.SuspendLayout();
+            this.Account.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CoverImage)).BeginInit();
             this.SuspendLayout();
             // 
@@ -100,6 +101,7 @@ namespace Playlist
             // 
             // SearchButton
             // 
+            this.SearchButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.SearchButton.Image = ((System.Drawing.Image)(resources.GetObject("SearchButton.Image")));
             this.SearchButton.Location = new System.Drawing.Point(39, 262);
             this.SearchButton.Name = "SearchButton";
@@ -110,6 +112,7 @@ namespace Playlist
             // 
             // OpenFileButton
             // 
+            this.OpenFileButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.OpenFileButton.Image = ((System.Drawing.Image)(resources.GetObject("OpenFileButton.Image")));
             this.OpenFileButton.Location = new System.Drawing.Point(39, 181);
             this.OpenFileButton.Name = "OpenFileButton";
@@ -166,7 +169,7 @@ namespace Playlist
             // 
             this.RepeatingButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.RepeatingButton.Image = ((System.Drawing.Image)(resources.GetObject("RepeatingButton.Image")));
-            this.RepeatingButton.Location = new System.Drawing.Point(229, 59);
+            this.RepeatingButton.Location = new System.Drawing.Point(228, 60);
             this.RepeatingButton.Name = "RepeatingButton";
             this.RepeatingButton.Size = new System.Drawing.Size(30, 30);
             this.RepeatingButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -245,14 +248,14 @@ namespace Playlist
             this.MusicBar.TickStyle = System.Windows.Forms.TickStyle.None;
             this.MusicBar.Scroll += new System.EventHandler(this.MusicBar_Scroll);
             // 
-            // Profile
+            // Account
             // 
-            this.Profile.Controls.Add(this.CoverImage);
-            this.Profile.Dock = System.Windows.Forms.DockStyle.Top;
-            this.Profile.Location = new System.Drawing.Point(121, 0);
-            this.Profile.Name = "Profile";
-            this.Profile.Size = new System.Drawing.Size(830, 209);
-            this.Profile.TabIndex = 8;
+            this.Account.Controls.Add(this.CoverImage);
+            this.Account.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Account.Location = new System.Drawing.Point(121, 0);
+            this.Account.Name = "Account";
+            this.Account.Size = new System.Drawing.Size(830, 209);
+            this.Account.TabIndex = 8;
             // 
             // CoverImage
             // 
@@ -275,14 +278,22 @@ namespace Playlist
             this.MusicList.TabIndex = 9;
             this.MusicList.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.MusicList_Wheel);
             // 
+            // panel1
+            // 
+            this.panel1.Location = new System.Drawing.Point(285, 262);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(400, 50);
+            this.panel1.TabIndex = 10;
+            // 
             // PlaylistForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(14)))), ((int)(((byte)(14)))));
             this.ClientSize = new System.Drawing.Size(951, 577);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.PlayPanel);
-            this.Controls.Add(this.Profile);
+            this.Controls.Add(this.Account);
             this.Controls.Add(this.LeftSidePanel);
             this.Controls.Add(this.MusicList);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -306,7 +317,7 @@ namespace Playlist
             ((System.ComponentModel.ISupportInitialize)(this.NextButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PlayButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MusicBar)).EndInit();
-            this.Profile.ResumeLayout(false);
+            this.Account.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.CoverImage)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -328,10 +339,11 @@ namespace Playlist
         private System.Windows.Forms.PictureBox PreviousButton;
         private System.Windows.Forms.PictureBox NextButton;
         private System.Windows.Forms.PictureBox PlayButton;
-        private System.Windows.Forms.Panel Profile;
+        private System.Windows.Forms.Panel Account;
         private System.Windows.Forms.FlowLayoutPanel MusicList;
         private System.Windows.Forms.PictureBox CoverImage;
         private System.Windows.Forms.PictureBox OpenFileButton;
+        private Panel panel1;
     }
 }
 
