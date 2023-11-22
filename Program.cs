@@ -37,6 +37,7 @@ namespace Playlist
         public DoublyLinkedList(object Value) { Add(Value); }
         public DoublyLinkedList() { this.Head = null; this.Tail = null; this.Count = 0; }
 
+        #region Các hàm chuyển đổi kiểu dữ liệu
         // Chuyển đổi Doubly Linked List qua Array
         public Array ToArray()
         {
@@ -54,23 +55,13 @@ namespace Playlist
                 List.Add(LinkedListElement.Value);
                 LinkedListElement = LinkedListElement.Next;
             }
-
             return List;
         }
+
+        // Chuyển đổi Doubly Linked List qua string[]
         public string[] ToArray_String()
         {
             return this.ToList().Select(obj => obj.ToString()).ToArray();
-        }
-
-        // Cho phép Doubly Linked List sử dụng vòng lặp foreach, Enumeration
-        public IEnumerator GetEnumerator()
-        {
-            Node Current = Head;
-            while (Current != null)
-            {
-                yield return Current.Value;
-                Current = Current.Next;
-            }
         }
 
         // Cho phép khởi tạo một Doubly Linked List mới từ một Array
@@ -85,12 +76,95 @@ namespace Playlist
 
             return NewList;
         }
+        #endregion
+
+        // Cho phép Doubly Linked List sử dụng vòng lặp foreach, Enumeration
+        public IEnumerator GetEnumerator()
+        {
+            Node Current = Head;
+            while (Current != null)
+            {
+                yield return Current;
+                Current = Current.Next;
+            }
+        }
+
+        #region Các hàm tiện ích trong class
+        // Truy cập phần tử thông qua chỉ số
+        private Node Find(int index)
+        {
+            Node FindNode = Head;
+            if (FindNode != null)
+                for (int i = 0; i < index; i++)
+                    FindNode = FindNode.Next;
+            return FindNode;
+        }
+
+        // Kiểm tra tính hợp lệ của chỉ số
+        private void ValidIndex(int index)
+        {
+            if (index < 0 || index >= Count)
+                throw new IndexOutOfRangeException("Chỉ số không hợp lệ!");
+        }
+        #endregion
+
+        #region Các hàm truy cập
+        // Tìm vị trí của Node
+        public int FindIndex(Node FindNode)
+        {
+            for (int i = 0; i < Count; i++)
+                if (FindNode == this.Find(i))
+                    return i;
+
+            return -1;
+        }
+        
+        // Lấy một Node từ chỉ số
+        public Node GetNode(int index)
+        {
+            Node FindNode = Find(index);
+            return FindNode;
+        }
+
+        // Truy cập phần tử thông qua chỉ số
+        public object GetValue(int index)
+        {
+            ValidIndex(index);
+
+            Node FindNode = Find(index);
+            return FindNode.Value;
+        }
 
         // Cho phép truy cập, gán giá trị thông qua chỉ số với cặp dấu '[]'
         public object this[int index]
         {
             get { return GetValue(index); }
             set { SetValue(index, value); }
+        }
+        #endregion
+
+        #region Các hàm thay đổi cấu trúc List
+        // Đặt giá trị phần tử
+        public void SetValue(int index, object NewValue)
+        {
+            ValidIndex(index);
+
+            Node FindNode = Find(index);
+            FindNode.Value = NewValue;
+        }
+
+        // Hoán đổi giá trị 2 Node
+        public void Inverted(int index1, int index2)
+        {
+            object Node1 = Find(index1).Value;
+            object Node2 = Find(index2).Value;
+
+            object Swap = Node1;
+            Node1 = Node2;
+            Node2 = Swap;
+
+            this.SetValue(index1, Node1);
+            this.SetValue(index2, Node2);
         }
 
         // Thêm một phần tử vào cuối List
@@ -137,9 +211,7 @@ namespace Playlist
             }
             else
             {
-                Node FindNode = Head;
-                for (int i = 0; i < index - 1; i++)
-                    FindNode = FindNode.Next;
+                Node FindNode = Find(index - 1);
 
                 Node TheRest = FindNode.Next;
                 TheRest.Previous = NewNode;
@@ -158,36 +230,6 @@ namespace Playlist
                     this.Insert(index + i, ((dynamic)Value)[i]);
             else
                 this.Insert(index, Value);
-        }
-
-        // Truy cập phần tử thông qua chỉ số
-        public object GetValue(int index)
-        {
-            ValidIndex(index);
-
-            Node FindNode = Head;
-            for (int i = 0; i < index; i++)
-                FindNode = FindNode.Next;
-            return FindNode.Value;
-        }
-
-        // Đặt giá trị phần tử
-        public void SetValue(int index, object NewValue)
-        {
-            ValidIndex(index);
-
-            Node FindNode = Head;
-            for (int i = 0; i < index; i++)
-                FindNode = FindNode.Next;
-
-            FindNode.Value = NewValue;
-        }
-
-        // Kiểm tra tính hợp lệ của chỉ số
-        public void ValidIndex(int index)
-        {
-            if (index < 0 || index >= Count)
-                throw new IndexOutOfRangeException("Chỉ số không hợp lệ!");
         }
 
         // Xoá một phần tử thông qua chỉ số
@@ -215,10 +257,7 @@ namespace Playlist
             }
             else
             {
-                Node FindNode = Head;
-                for (int i = 0; i < index - 1; i++)
-                    FindNode = FindNode.Next;
-
+                Node FindNode = Find(index - 1);
                 Node TheRest = FindNode.Next.Next;
                 FindNode.Next = TheRest;
             }
@@ -234,5 +273,6 @@ namespace Playlist
                 this.Remove(i);
         }
     }
+    #endregion
     #endregion
 }

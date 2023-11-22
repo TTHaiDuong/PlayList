@@ -53,7 +53,6 @@ namespace Playlist
             this.Account = new System.Windows.Forms.Panel();
             this.CoverImage = new System.Windows.Forms.PictureBox();
             this.MusicList = new System.Windows.Forms.FlowLayoutPanel();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.LeftSidePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.IconApp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SearchButton)).BeginInit();
@@ -269,21 +268,13 @@ namespace Playlist
             // MusicList
             // 
             this.MusicList.AutoSize = true;
-            this.MusicList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(14)))), ((int)(((byte)(14)))));
+            this.MusicList.BackColor = System.Drawing.Color.Transparent;
             this.MusicList.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.MusicList.Location = new System.Drawing.Point(135, 215);
-            this.MusicList.MaximumSize = new System.Drawing.Size(500, 0);
+            this.MusicList.Location = new System.Drawing.Point(124, 215);
             this.MusicList.Name = "MusicList";
-            this.MusicList.Size = new System.Drawing.Size(300, 0);
+            this.MusicList.Size = new System.Drawing.Size(200, 100);
             this.MusicList.TabIndex = 9;
             this.MusicList.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.MusicList_Wheel);
-            // 
-            // panel1
-            // 
-            this.panel1.Location = new System.Drawing.Point(285, 262);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(400, 50);
-            this.panel1.TabIndex = 10;
             // 
             // PlaylistForm
             // 
@@ -291,11 +282,10 @@ namespace Playlist
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(14)))), ((int)(((byte)(14)))));
             this.ClientSize = new System.Drawing.Size(951, 577);
-            this.Controls.Add(this.panel1);
             this.Controls.Add(this.PlayPanel);
+            this.Controls.Add(this.MusicList);
             this.Controls.Add(this.Account);
             this.Controls.Add(this.LeftSidePanel);
-            this.Controls.Add(this.MusicList);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximumSize = new System.Drawing.Size(969, 624);
@@ -343,7 +333,6 @@ namespace Playlist
         private System.Windows.Forms.FlowLayoutPanel MusicList;
         private System.Windows.Forms.PictureBox CoverImage;
         private System.Windows.Forms.PictureBox OpenFileButton;
-        private Panel panel1;
     }
 }
 
