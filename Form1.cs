@@ -38,12 +38,15 @@ namespace Playlist
             CurrentFile = PathOfFiles.Head;
 
             // Khởi tạo bài hát đầu tiên
-            PlayerDevice = new WaveOut();
-            PlayCurrentFile = new AudioFileReader(CurrentFile.Value.ToString());
-            PlayerDevice.Init(PlayCurrentFile);
-            PlayCurrentFile.CurrentTime = TimeSpan.Zero;
-            MusicBar.Maximum = (int)PlayCurrentFile.TotalTime.TotalSeconds;
-            MusicBar.Value = 0;
+            if (CurrentFile != null)
+            {
+                PlayerDevice = new WaveOut();
+                PlayCurrentFile = new AudioFileReader(CurrentFile.Value.ToString());
+                PlayerDevice.Init(PlayCurrentFile);
+                PlayCurrentFile.CurrentTime = TimeSpan.Zero;
+                MusicBar.Maximum = (int)PlayCurrentFile.TotalTime.TotalSeconds;
+                MusicBar.Value = 0;
+            }
 
             DisplayPlayList();
         }
@@ -174,7 +177,10 @@ namespace Playlist
 
             // Add những file vào trong list
             if (OpenFile.ShowDialog() == DialogResult.OK)
+            {
                 PathOfFiles.AddRange(OpenFile.FileNames);
+                new PlaylistForm();
+            }
 
             DisplayPlayList();
 
@@ -330,6 +336,12 @@ namespace Playlist
             }
         }
 
+        // Kéo thả MusicPanel
+        private void HoldMusicPanel()
+        {
+
+        }
+
         // Đổi tên bài hát
         private void RenameMusic(object sender, EventArgs e)
         {
@@ -337,7 +349,7 @@ namespace Playlist
         }
 
         // Xoá bài hát
-        private void RemoveMusic()
+        private void RemoveMusic(object sender, EventArgs e)
         {
 
         }
