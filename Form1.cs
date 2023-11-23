@@ -50,6 +50,35 @@ namespace Playlist
 
             DisplayPlayList();
         }
+        public void ResetProperties()
+        {
+
+            // Đặt các thuộc tính điều khiển
+            PlayerDevice = new WaveOut();
+            AutoNext = true;
+            Repeating = false;
+            VolumeWas = 1;
+            MusicBar.Value = 0;
+            SpeakerBar.Value = 100;
+
+            // Tải lại những bài hát đã được up lên app
+            File.AppendAllText("MusicList", "");
+            PathOfFiles = DoublyLinkedList.FromArray(File.ReadAllLines("MusicList"));
+            CurrentFile = PathOfFiles.Head;
+
+            // Khởi tạo bài hát đầu tiên
+            if (CurrentFile != null)
+            {
+                PlayerDevice = new WaveOut();
+                PlayCurrentFile = new AudioFileReader(CurrentFile.Value.ToString());
+                PlayerDevice.Init(PlayCurrentFile);
+                PlayCurrentFile.CurrentTime = TimeSpan.Zero;
+                MusicBar.Maximum = (int)PlayCurrentFile.TotalTime.TotalSeconds;
+                MusicBar.Value = 0;
+            }
+
+            DisplayPlayList();
+        }
 
         #region Các thuộc tính điều khiển
         DoublyLinkedList PathOfFiles; // Lưu đường dẫn của các file
@@ -179,7 +208,7 @@ namespace Playlist
             if (OpenFile.ShowDialog() == DialogResult.OK)
             {
                 PathOfFiles.AddRange(OpenFile.FileNames);
-                new PlaylistForm();
+                ResetProperties();
             }
 
             DisplayPlayList();
