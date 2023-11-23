@@ -23,36 +23,12 @@ namespace Playlist
         public PlaylistForm()
         {
             InitializeComponent();
-
-            // Đặt các thuộc tính điều khiển
-            PlayerDevice = new WaveOut();
-            AutoNext = true;
-            Repeating = false;
-            VolumeWas = 1;
-            MusicBar.Value = 0;
-            SpeakerBar.Value = 100;
-
-            // Tải lại những bài hát đã được up lên app
-            File.AppendAllText("MusicList", "");
-            PathOfFiles = DoublyLinkedList.FromArray(File.ReadAllLines("MusicList"));
-            CurrentFile = PathOfFiles.Head;
-
-            // Khởi tạo bài hát đầu tiên
-            if (CurrentFile != null)
-            {
-                PlayerDevice = new WaveOut();
-                PlayCurrentFile = new AudioFileReader(CurrentFile.Value.ToString());
-                PlayerDevice.Init(PlayCurrentFile);
-                PlayCurrentFile.CurrentTime = TimeSpan.Zero;
-                MusicBar.Maximum = (int)PlayCurrentFile.TotalTime.TotalSeconds;
-                MusicBar.Value = 0;
-            }
-
-            DisplayPlayList();
+            ResetProperties();
         }
+
+        // Hàm reset thuộc tính
         public void ResetProperties()
         {
-
             // Đặt các thuộc tính điều khiển
             PlayerDevice = new WaveOut();
             AutoNext = true;
@@ -94,16 +70,19 @@ namespace Playlist
         // Xử lý sự kiện khi nhấn nút Play
         private void Play_Click(object sender, EventArgs e)
         {
-            PlayButton.Visible = false;
-            PauseButton.Visible = true;
+            if (CurrentFile != null)
+            {
+                PlayButton.Visible = false;
+                PauseButton.Visible = true;
 
-            TimerMusicBar.Start();
-            PlayerDevice.Play();
+                TimerMusicBar.Start();
+                PlayerDevice.Play();
 
-            if (MusicBar.Value == MusicBar.Maximum && !(Repeating || AutoNext))
-                StartMusic(CurrentFile.Value.ToString());
+                if (MusicBar.Value == MusicBar.Maximum && !(Repeating || AutoNext))
+                    StartMusic(CurrentFile.Value.ToString());
 
-            DisplayPlayList();
+                DisplayPlayList();
+            }
         }
         // Xử lý sự kiện khi nhấn Pause
         private void Pause_Click(object sender, EventArgs e)
@@ -208,13 +187,9 @@ namespace Playlist
             if (OpenFile.ShowDialog() == DialogResult.OK)
             {
                 PathOfFiles.AddRange(OpenFile.FileNames);
+                File.WriteAllLines("MusicList", PathOfFiles.ToArray_String());
                 ResetProperties();
             }
-
-            DisplayPlayList();
-
-            // Lưu lại những bài hát được up lên app
-            File.WriteAllLines("MusicList", PathOfFiles.ToArray_String());
         }
         #endregion
 
