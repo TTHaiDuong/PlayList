@@ -63,9 +63,29 @@ namespace Playlist.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap PauseButton_Image {
+            get {
+                object obj = ResourceManager.GetObject("PauseButton.Image", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap PauseThis {
             get {
                 object obj = ResourceManager.GetObject("PauseThis", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PlayButton_Image {
+            get {
+                object obj = ResourceManager.GetObject("PlayButton.Image", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{982F9BCF-F5C6-4E4B-9C18-9F397726D316}</ProjectGuid>
+    <ProjectGuid>{CE5E3194-59C1-4C30-B0AA-2AB84C4C310B}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Playlist</RootNamespace>
     <AssemblyName>Playlist</AssemblyName>
@@ -112,29 +112,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="AxWMPLib">
-      <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>aximp</WrapperTool>
-      <Isolated>False</Isolated>
-    </COMReference>
-    <COMReference Include="WMPLib">
-      <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
+    <None Include="Resources\PauseThis.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\PlayThis.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\PauseThis.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
