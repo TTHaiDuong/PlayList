@@ -117,5 +117,8 @@
   <ItemGroup>
     <None Include="Resources\PlayThis.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\searching-bar.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using NAudio.Wave;
 using Playlist.Properties;
 
@@ -39,7 +40,7 @@ namespace Playlist
             {
                 MusicList.Name = "MusicList";
                 MusicList.Location = new Point(127, 150);
-                MusicList.UpperLimit = CoverImage.Location.Y + CoverImage.Height;
+                MusicList.UpperLimit = TopPanel.Location.Y + TopPanel.Height;
                 MusicList.LowerLimit = PlayPanel.Location.Y;
                 MusicList.Trash = Trash;
                 MusicList.PlayPause += PlayPause_Click;
@@ -202,5 +203,37 @@ namespace Playlist
                 string.Format("{0:h\\:mm\\:ss}", TimeSpan.FromSeconds(PlayMusicList.CurrentTime)) :
                 string.Format("{0:m\\:ss}", TimeSpan.FromSeconds(PlayMusicList.CurrentTime));
         }
+
+        private void SearchTextBox_TextChanged(object sender, EventArgs e)
+        {
+            LoadData();
+        }
+
+        private void SearchButton_Click(object sender, EventArgs e)
+        {
+            LoadData();
+        }
+
+        public void LoadData()
+        {
+            string searchTerm = SearchTextBox.Text.ToLower();
+
+            string[] songArray = PlayMusicList.ToArray();
+
+            // Xóa tất cả các mục cũ khỏi ListBox trước khi hiển thị kết quả tìm kiếm mới
+            listBox1.Items.Clear();
+
+            foreach (string filePath in songArray)
+            {
+                string fileName = Path.GetFileNameWithoutExtension(filePath);
+
+                if (fileName.ToLower().Contains(searchTerm))
+                {
+                    listBox1.Items.Add(fileName);
+                }
+            }
+        }
+
     }
 }
+
