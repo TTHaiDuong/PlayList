@@ -32,7 +32,7 @@ namespace Playlist
         /// <summary>
         /// Đường dẫn của File âm thanh.
         /// </summary>
-        public string File;
+        public string FileName;
 
         /// <summary>
         /// Dùng để liên kết với các Node khác.
@@ -44,7 +44,7 @@ namespace Playlist
         /// </summary>
         public PlaylistNode()
         {
-            this.File = null;
+            this.FileName = null;
             this.Next = null;
             this.Previous = null;
         }
@@ -61,7 +61,7 @@ namespace Playlist
                 this.Next = null;
                 this.Previous = null;
             }
-            this.File = File;
+            this.FileName = File;
         }
     }
 
@@ -76,7 +76,7 @@ namespace Playlist
         /// <summary>
         /// Sự kiện khi Playlist bắt đầu phát một File.
         /// </summary>
-        public event EventHandler StartPlayingFile;
+        public event EventHandler NewAudioFile;
         /// <summary>
         /// Sự kiện khi Playlist phát hết một File.
         /// </summary>
@@ -91,22 +91,17 @@ namespace Playlist
         /// <summary>
         /// Dùng để trỏ tới hai phần tử đầu hoặc cuối của Playlist.
         /// </summary>
-        private PlaylistNode Head, Tail;
+        private PlaylistNode HeadNode, TailNode;
 
         /// <summary>
         /// Dùng để trỏ tới File âm thanh được phát hiện tại.
         /// </summary>
-        private PlaylistNode Current;
-
-        /// <summary>
-        /// File âm thanh hiện tại mà Playlist phát.
-        /// </summary>
-        public string CurrentFile { get => Current != null ? Current.File : ""; }
+        public PlaylistNode CurrentNode;
 
         /// <summary>
         /// Chỉ số File âm thanh hiện tại trong Playlist dùng để phát.
         /// </summary>
-        public int CurrentIndex { get => FindIndex(CurrentFile); }
+        public int CurrentIndex { get => FindIndex(CurrentNode.FileName); }
 
         /// <summary>
         /// Số lượng phần tử trong Playlist
@@ -178,11 +173,7 @@ namespace Playlist
             set
             {
                 ContainerAutoNext = value;
-                if (value)
-                {
-                    Repeating = false;
-                    //if (CurrentTime == TotalTime) NextFile();
-                }
+                if (value) Repeating = false;
             }
             get { return this.ContainerAutoNext; }
         }
@@ -196,11 +187,7 @@ namespace Playlist
             set
             {
                 ContainerRepeating = value;
-                if (value)
-                {
-                    AutoNext = false;
-                    //if (CurrentTime == TotalTime) StartToPlay();
-                }
+                if (value) AutoNext = false;
             }
             get { return this.ContainerRepeating; }
         }
@@ -211,9 +198,9 @@ namespace Playlist
         /// </summary>
         public Playlist()
         {
-            this.Head = null;
-            this.Tail = null;
-            this.Current = null;
+            this.HeadNode = null;
+            this.TailNode = null;
+            this.CurrentNode = null;
             this.Count = 0;
             this.AutoNext = true;
             this.Repeating = false;
@@ -226,15 +213,15 @@ namespace Playlist
         {
             for (int i = 0; i < this.Count; i++)
             {
-                yield return Find(i).File;
+                yield return Find(i).FileName;
             }
         }
 
         // Truy cập phần tử Playlist bằng cặp dấu [].
         public string this[int Index]
         {
-            set { Find(Index).File = value; }
-            get { return Find(Index).File; }
+            set { Find(Index).FileName = value; }
+            get { return Find(Index).FileName; }
         }
 
         /// <summary>
@@ -244,9 +231,9 @@ namespace Playlist
         /// <returns>Trả về kiểu dữ liệu là Playlist.</returns>
         public Playlist FromArray(string[] Files)
         {
-            Head = null;
-            Tail = null;
-            Current = null;
+            HeadNode = null;
+            TailNode = null;
+            CurrentNode = null;
             this.AddRange(Files);
             return this;
         }
@@ -259,10 +246,10 @@ namespace Playlist
         {
             string[] Array = new string[this.Count];
 
-            PlaylistNode Current = Head;
+            PlaylistNode Current = HeadNode;
             for (int i = 0; i < this.Count; i++)
             {
-                Array[i] = Current.File;
+                Array[i] = Current.FileName;
                 Current = Current.Next;
             }
             return Array;
@@ -295,11 +282,11 @@ namespace Playlist
         /// </summary>
         /// <param name="Index">Chỉ số phần tử muốn tìm.</param>
         /// <returns>Node cần tìm.</returns>
-        private PlaylistNode Find(int Index)
+        public PlaylistNode Find(int Index)
         {
             this.ValidIndex(Index);
 
-            PlaylistNode FindNode = Head;
+            PlaylistNode FindNode = HeadNode;
 
             for (int i = 0; i < Index; i++)
                 FindNode = FindNode.Next;
@@ -307,12 +294,12 @@ namespace Playlist
             return FindNode;
         }
 
-        private int FindIndex(string Find)
+        public int FindIndex(string Find)
         {
-            PlaylistNode Current = Head;
+            PlaylistNode Current = HeadNode;
             for (int i = 0; i < Count; i++)
             {
-                if (Current.File == Find) return i;
+                if (Current.FileName == Find) return i;
                 Current = Current.Next;
             }
             return -1;
@@ -327,17 +314,17 @@ namespace Playlist
             if (this.CanPlayAudio(NewFile))
             {
                 PlaylistNode NewNode = new PlaylistNode(NewFile, true);
-                if (Head == null)
+                if (HeadNode == null)
                 {
-                    Head = NewNode;
-                    Tail = NewNode;
-                    Current = NewNode;
+                    HeadNode = NewNode;
+                    TailNode = NewNode;
+                    CurrentNode = NewNode;
                 }
                 else
                 {
-                    Tail.Next = NewNode;
-                    NewNode.Previous = Tail;
-                    Tail = NewNode;
+                    TailNode.Next = NewNode;
+                    NewNode.Previous = TailNode;
+                    TailNode = NewNode;
                 }
                 this.Count++;
             }
@@ -368,23 +355,23 @@ namespace Playlist
 
                 if (Index == 0)
                 {
-                    if (Head == null)
+                    if (HeadNode == null)
                     {
-                        Head = NewNode;
-                        Tail = NewNode;
+                        HeadNode = NewNode;
+                        TailNode = NewNode;
                     }
                     else
                     {
-                        NewNode.Next = Head;
-                        Head.Previous = NewNode;
-                        Head = NewNode;
+                        NewNode.Next = HeadNode;
+                        HeadNode.Previous = NewNode;
+                        HeadNode = NewNode;
                     }
                 }
                 else if (Index == Count)
                 {
-                    Tail.Next = NewNode;
-                    NewNode.Previous = Tail;
-                    Tail = NewNode;
+                    TailNode.Next = NewNode;
+                    NewNode.Previous = TailNode;
+                    TailNode = NewNode;
                 }
                 else
                 {
@@ -423,19 +410,19 @@ namespace Playlist
             {
                 if (this.Count == 1)
                 {
-                    Head = null;
-                    Tail = null;
+                    HeadNode = null;
+                    TailNode = null;
                 }
                 else
                 {
-                    Head = Head.Next;
-                    Head.Previous = null;
+                    HeadNode = HeadNode.Next;
+                    HeadNode.Previous = null;
                 }
             }
             else if (Index == Count - 1)
             {
-                Tail = Tail.Previous;
-                Tail.Next = null;
+                TailNode = TailNode.Previous;
+                TailNode.Next = null;
             }
             else
             {
@@ -482,19 +469,18 @@ namespace Playlist
         /// <summary>
         /// Phương thức chuẩn bị, đọc phát File âm thanh.
         /// </summary>
-        public void StartToPlay()
+        public void PrepareToPlay()
         {
             StopAndDisposePlayerDevice();
-            if (CanPlayAudio(Current?.File))
+            if (CanPlayAudio(CurrentNode?.FileName))
             {
-                FileReader = new AudioFileReader(Current.File);
+                FileReader = new AudioFileReader(CurrentNode.FileName);
                 PlayerDevice = new WaveOut();
-                StartPlayingFile?.Invoke(this, new EventArgs());
+                NewAudioFile?.Invoke(this, new EventArgs());
                 PlayerDevice.PlaybackStopped += OnPlaybackStopped;
                 PlayerDevice.PlaybackStopped += (sender, e) => { FinishPlayingFile?.Invoke(this, e); };
                 PlayerDevice.Init(FileReader);
                 TimerTick.Interval = 1000;
-                Play();
             }
         }
 
@@ -504,11 +490,15 @@ namespace Playlist
         private void OnPlaybackStopped(object sender, StoppedEventArgs e)
         {
             TimerTick.Stop();
-            if (ContainerRepeating) StartToPlay();
+            if (ContainerRepeating)
+            {
+                PrepareToPlay();
+                Play();
+            }
             if (ContainerAutoNext)
             {
                 NextFile();
-                StartToPlay();
+                Play();
             }
         }
 
@@ -529,12 +519,12 @@ namespace Playlist
         {
 
             if (PlayerDevice == null || FileReader == null || CurrentTime == TotalTime)
-                StartToPlay();
-            else
             {
-                PlayerDevice?.Play();
-                TimerTick?.Start();
+                PrepareToPlay();
+                PlayerDevice.Play();
             }
+            PlayerDevice?.Play();
+            TimerTick?.Start();
         }
 
         /// <summary>
@@ -554,9 +544,10 @@ namespace Playlist
         /// </summary>
         public void NextFile()
         {
-            if (Current?.Next != null)
-                Current = Current.Next;
-            StartToPlay();
+            if (CurrentNode?.Next != null)
+                CurrentNode = CurrentNode.Next;
+            PrepareToPlay();
+            PlayerDevice.Play();
         }
 
         /// <summary>
@@ -564,9 +555,10 @@ namespace Playlist
         /// </summary>
         public void PreviousFile()
         {
-            if (Current?.Previous != null)
-                Current = Current.Previous;
-            StartToPlay();
+            if (CurrentNode?.Previous != null)
+                CurrentNode = CurrentNode.Previous;
+            PrepareToPlay();
+            PlayerDevice.Play();
         }
 
         /// <summary>
@@ -575,8 +567,8 @@ namespace Playlist
         /// <param name="Index">Vị trí của File trong Playlist.</param>
         public void ChooseFile(int Index)
         {
-            Current = Find(Index);
-            StartToPlay();
+            CurrentNode = Find(Index);
+            PrepareToPlay();
         }
     }
 
@@ -591,8 +583,8 @@ namespace Playlist
         /// </summary>
         public string FilesPath { set; get; }
 
-        private string[] MusicFiles;
-        private string[] ImageFiles;
+        public string[] MusicFiles;
+        private readonly string[] ImageFiles;
 
         /// <summary>
         /// Kết nối, điều khiển Playlist.
@@ -611,14 +603,14 @@ namespace Playlist
         public event EventHandler ChoosingAnotherMusic;
 
         /// <summary>
-        /// Chỉ số File âm thanh được phát lúc trước.
+        /// File âm thanh được phát lúc trước.
         /// </summary>
-        private int PreviousMusic;
+        public string PreviousMusic;
 
         /// <summary>
         /// Panel được sử dụng hiện tại.
         /// </summary>
-        public PanelExtension Current;
+        public Panel Current;
 
         /// <summary>
         /// Object dùng để dùng làm thùng rác xoá Item trong MusicListPanel.
@@ -635,7 +627,6 @@ namespace Playlist
             this.FlowDirection = FlowDirection.TopDown;
             this.AutoSize = true;
             this.BackColor = Color.Transparent;
-            this.PreviousMusic = 0;
             this.UpperLimit = 0;
             this.LowerLimit = 0;
             this.PlayPauseButton = null;
@@ -648,6 +639,16 @@ namespace Playlist
             this.MouseWheel += MusicListPanel_Wheel;
             this.Controls.Clear();
             this.BringToFront();
+
+            if (!Directory.Exists(FilesPath)) Directory.CreateDirectory(FilesPath);
+            MusicFiles = Directory.GetFiles(FilesPath).Where(File => Path.GetExtension(File).Equals(".mp3", StringComparison.OrdinalIgnoreCase)).ToArray();
+            ImageFiles = Directory.GetFiles(FilesPath).Where(File => string.IsNullOrEmpty(Path.GetExtension(File))).ToArray();
+
+            PlayerDevice.FromArray(MusicFiles);
+
+            if (PlayerDevice.CurrentNode != null)
+                this.PreviousMusic = PlayerDevice.CurrentNode.FileName;
+
         }
 
         /// <summary>
@@ -655,11 +656,6 @@ namespace Playlist
         /// </summary>
         public void InitializeComponent()
         {
-            if (!Directory.Exists(FilesPath)) Directory.CreateDirectory(FilesPath);
-            MusicFiles = Directory.GetFiles(FilesPath).Where(File => Path.GetExtension(File).Equals(".mp3", StringComparison.OrdinalIgnoreCase)).ToArray();
-            ImageFiles = Directory.GetFiles(FilesPath).Where(File => string.IsNullOrEmpty(Path.GetExtension(File))).ToArray();
-
-            PlayerDevice.FromArray(MusicFiles);
 
             if (Trash != null) this.Trash.Visible = false;
             this.Controls.Clear();
@@ -668,7 +664,7 @@ namespace Playlist
                 for (int i = 0; i < MusicFiles.Length; i++)
                 {
                     // Tạo Panel cho một bài hát và các thành phần của nó
-                    PanelExtension MusicPanel = new PanelExtension();
+                    Panel MusicPanel = new Panel();
                     PictureBox ImageMusic = new PictureBox();
                     PictureBox PlayButton = new PictureBox();
                     Label MusicName = new Label();
@@ -676,7 +672,7 @@ namespace Playlist
                     //
                     // Hình đại diện bài hát
                     //
-                    ImageMusic.Name = "ImageMusic" + i;
+                    ImageMusic.Name = "ImageMusic";
                     ImageMusic.Size = new Size(30, 30);
                     ImageMusic.SizeMode = PictureBoxSizeMode.Zoom;
                     ImageMusic.Tag = MusicFiles[i];
@@ -687,18 +683,20 @@ namespace Playlist
                     //
                     // Nút PlayPause 
                     //
-                    PlayButton.Name = "PlayButton" + i;
+                    PlayButton.Name = "PlayButton";
                     PlayButton.Size = new Size(20, 20);
                     PlayButton.Cursor = Cursors.Hand;
                     PlayButton.SizeMode = PictureBoxSizeMode.Zoom;
-                    if (PlayerDevice.CurrentFile == MusicFiles[i] && PlayerDevice.IsPlaying) PlayButton.Image = Properties.Resources.PauseThis;
-                    else PlayButton.Image = Properties.Resources.PlayThis;
+                    if (PlayerDevice.CurrentNode.FileName == MusicFiles[i] && PlayerDevice.IsPlaying)
+                        PlayButton.Image = Properties.Resources.PauseThis;
+                    else
+                        PlayButton.Image = Properties.Resources.PlayThis;
                     PlayButton.Tag = false; // true là đang phát, false là dừng
-                    PlayButton.Click += (sender, e) => PlayButton_Click(((sender as PictureBox).Parent as dynamic).Index);
+                    PlayButton.Click += (sender, e) => PlayButton_Click(((sender as PictureBox).Parent as dynamic).Name);
                     //
                     // Tên bài hát
                     //
-                    MusicName.Name = "MusicName" + i;
+                    MusicName.Name = "MusicName";
                     MusicName.Text = (i + 1) + ". " + Path.GetFileNameWithoutExtension(MusicFiles[i]);
                     MusicName.Font = new Font("Roboto", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                     MusicName.ForeColor = Color.White;
@@ -706,11 +704,11 @@ namespace Playlist
                     MusicName.Size = new Size(150, 50);
                     MusicName.Cursor = Cursors.Hand;
                     MusicName.TextAlign = ContentAlignment.MiddleLeft;
-                    MusicName.Click += (sender, e) => PlayButton_Click(((sender as Label).Parent as dynamic).Index);
+                    MusicName.Click += (sender, e) => PlayButton_Click(((sender as Label).Parent as dynamic).Name);
                     //
                     // Thời lượng bài hát
                     //
-                    TotalTime.Name = "TotalTime" + i;
+                    TotalTime.Name = "TotalTime";
                     TotalTime.Size = new Size(50, 50);
                     TotalTime.Font = new Font("Roboto", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                     AudioFileReader ReadTime = new AudioFileReader(MusicFiles[i]);
@@ -723,8 +721,7 @@ namespace Playlist
                     //
                     // Cài đặt thuộc tính của Panel bài hát
                     //
-                    MusicPanel.Name = "MusicPanel" + i;
-                    MusicPanel.Index = i;
+                    MusicPanel.Name = MusicFiles[i];
                     MusicPanel.AllowDrop = true;
                     MusicPanel.Tag = MusicFiles[i];
                     MusicPanel.Size = new Size(420, 50);
@@ -745,7 +742,7 @@ namespace Playlist
                     MusicName.Location = new Point(175, 0);
                     TotalTime.Location = new Point(350, 0);
 
-                    if (i == 0) Current = MusicPanel;
+                    if (Current == null) Current = MusicPanel;
 
                     this.Controls.Add(MusicPanel);
                 }
@@ -774,12 +771,12 @@ namespace Playlist
         }
         public void PlayClick(int i)
         {
-            PlayButton_Click(i);
+            PlayButton_Click(PlayerDevice.Find(i).FileName);
         }
 
-        private void PlayButton_Click(int i)
+        private void PlayButton_Click(string FileName)
         {
-            if (this.Controls["MusicPanel" + i] != null && this.Controls["MusicPanel" + i].Controls["PlayButton" + i] is PictureBox PlayButton)
+            if (this.Controls[FileName] != null && this.Controls[FileName].Controls["PlayButton"] is PictureBox PlayButton)
             {
                 PlayButton.Tag = !(PlayButton.Tag as dynamic);
 
@@ -787,13 +784,16 @@ namespace Playlist
                 {
                     PlayButton.Image = Properties.Resources.PauseThis;
 
-                    if (PreviousMusic != i)
+                    if (PreviousMusic != FileName)
                     {
-                        PictureBox ResetPlayButton = this.Controls["MusicPanel" + PreviousMusic].Controls["PlayButton" + PreviousMusic] as PictureBox;
-                        ResetPlayButton.Image = Properties.Resources.PlayThis;
-                        ResetPlayButton.Tag = false;
-                        PlayerDevice.ChooseFile(i);
-                        Current = this.Controls["MusicPanel" + i] as PanelExtension;
+                        if (this.Controls[PreviousMusic] != null)
+                        {
+                            PictureBox ResetPlayButton = this.Controls[PreviousMusic].Controls["PlayButton"] as PictureBox;
+                            ResetPlayButton.Image = Properties.Resources.PlayThis;
+                            ResetPlayButton.Tag = false;
+                        }
+                        PlayerDevice.ChooseFile(PlayerDevice.FindIndex(FileName));
+                        Current = this.Controls[FileName] as Panel;
                     }
                     ChoosingAnotherMusic?.Invoke(this, new EventArgs());
                     PlayerDevice.Play();
@@ -806,7 +806,7 @@ namespace Playlist
                     PlayPauseButton.Image = Properties.Resources.PlayButton_Image;
                 }
 
-                PreviousMusic = i;
+                PreviousMusic = FileName;
             };
         }
         private void MusicListPanel_Wheel(object sender, MouseEventArgs e)
@@ -830,26 +830,32 @@ namespace Playlist
 
         private void MusicPanel_MouseUp(object sender, MouseEventArgs e)
         {
-            PanelExtension MusicPanel = sender as PanelExtension;
+            Panel MusicPanel = sender as Panel;
             if (Trash.Bounds.Contains(Trash.Parent.PointToClient(Cursor.Position)))
             {
-                if (MusicPanel.Index == PlayerDevice.CurrentIndex)
+                if (MusicPanel.Name == PlayerDevice.CurrentNode.FileName)
                     PlayerDevice.StopAndDisposePlayerDevice();
 
                 File.Delete(MusicPanel.Tag.ToString());
-                PictureBox DisposeImage = MusicPanel.Controls["ImageMusic" + MusicPanel.Index] as PictureBox;
-                DisposeImage.Image.Dispose();              
-                if (File.Exists(Path.Combine(FilesPath, Path.GetFileNameWithoutExtension(MusicPanel.Tag.ToString()))))
-                    File.Delete(Path.Combine(FilesPath, Path.GetFileNameWithoutExtension(MusicPanel.Tag.ToString())));
+                PictureBox DisposeImage = MusicPanel.Controls["ImageMusic"] as PictureBox;
+                DisposeImage.Image.Dispose();
+
+                try
+                {
+                    if (File.Exists(Path.Combine(FilesPath, Path.GetFileNameWithoutExtension(MusicPanel.Tag.ToString()))))
+                        File.Delete(Path.Combine(FilesPath, Path.GetFileNameWithoutExtension(MusicPanel.Tag.ToString())));
+                }
+                catch { }
+
+                string[] EditMusicsList = MusicFiles;
+                for (int i = 0; i < EditMusicsList.Length; i++)
+                    if (EditMusicsList[i] == MusicPanel.Name) EditMusicsList[i] = null;
+
+                MusicFiles = EditMusicsList.Where(FileName => FileName != null).ToArray();
 
                 this.InitializeComponent();
             }
             Trash.Visible = false;
         }
-    }
-
-    public class PanelExtension : Panel
-    {
-        public int Index { set; get; }
     }
 }

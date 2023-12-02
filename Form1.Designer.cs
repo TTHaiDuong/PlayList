@@ -29,17 +29,18 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PlaylistForm));
-            this.LeftPanel = new System.Windows.Forms.Panel();
+            this.Trash = new System.Windows.Forms.PictureBox();
             this.IconApp = new System.Windows.Forms.PictureBox();
             this.OpenFileButton = new System.Windows.Forms.PictureBox();
+            this.LeftPanel = new System.Windows.Forms.Panel();
             this.SearchButton = new System.Windows.Forms.PictureBox();
             this.TotalTime = new System.Windows.Forms.Label();
             this.CurrentTime = new System.Windows.Forms.Label();
+            this.ImageMusicPlaying2 = new System.Windows.Forms.PictureBox();
             this.PlayPanel = new System.Windows.Forms.Panel();
             this.RepeatingButton = new System.Windows.Forms.PictureBox();
             this.OnRepeating = new System.Windows.Forms.PictureBox();
             this.AutoNextMusic = new System.Windows.Forms.PictureBox();
-            this.ImageMusicPlaying2 = new System.Windows.Forms.PictureBox();
             this.SpeakerBar = new System.Windows.Forms.TrackBar();
             this.SpeakerButton = new System.Windows.Forms.PictureBox();
             this.PreviousButton = new System.Windows.Forms.PictureBox();
@@ -48,19 +49,18 @@
             this.MusicBar = new System.Windows.Forms.TrackBar();
             this.OnAutoNext = new System.Windows.Forms.PictureBox();
             this.ImageMusicPlaying1 = new System.Windows.Forms.PictureBox();
-            this.Trash = new System.Windows.Forms.PictureBox();
-            this.TopPanel = new System.Windows.Forms.Panel();
-            this.SearchTextBox = new System.Windows.Forms.TextBox();
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.LeftPanel.SuspendLayout();
+            this.CoverImage = new System.Windows.Forms.PictureBox();
+            this.SearchBox = new System.Windows.Forms.TextBox();
+            ((System.ComponentModel.ISupportInitialize)(this.Trash)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.IconApp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OpenFileButton)).BeginInit();
+            this.LeftPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SearchButton)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ImageMusicPlaying2)).BeginInit();
             this.PlayPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RepeatingButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OnRepeating)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.AutoNextMusic)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ImageMusicPlaying2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SpeakerBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SpeakerButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PreviousButton)).BeginInit();
@@ -69,9 +69,42 @@
             ((System.ComponentModel.ISupportInitialize)(this.MusicBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OnAutoNext)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ImageMusicPlaying1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Trash)).BeginInit();
-            this.TopPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CoverImage)).BeginInit();
             this.SuspendLayout();
+            // 
+            // Trash
+            // 
+            this.Trash.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Trash.Image = ((System.Drawing.Image)(resources.GetObject("Trash.Image")));
+            this.Trash.Location = new System.Drawing.Point(26, 499);
+            this.Trash.Name = "Trash";
+            this.Trash.Size = new System.Drawing.Size(50, 46);
+            this.Trash.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.Trash.TabIndex = 2;
+            this.Trash.TabStop = false;
+            // 
+            // IconApp
+            // 
+            this.IconApp.Image = ((System.Drawing.Image)(resources.GetObject("IconApp.Image")));
+            this.IconApp.Location = new System.Drawing.Point(12, 64);
+            this.IconApp.Name = "IconApp";
+            this.IconApp.Size = new System.Drawing.Size(83, 58);
+            this.IconApp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.IconApp.TabIndex = 0;
+            this.IconApp.TabStop = false;
+            // 
+            // OpenFileButton
+            // 
+            this.OpenFileButton.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.OpenFileButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.OpenFileButton.Image = ((System.Drawing.Image)(resources.GetObject("OpenFileButton.Image")));
+            this.OpenFileButton.Location = new System.Drawing.Point(39, 244);
+            this.OpenFileButton.Name = "OpenFileButton";
+            this.OpenFileButton.Size = new System.Drawing.Size(37, 37);
+            this.OpenFileButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.OpenFileButton.TabIndex = 0;
+            this.OpenFileButton.TabStop = false;
+            this.OpenFileButton.Click += new System.EventHandler(this.OpenFile_Click);
             // 
             // LeftPanel
             // 
@@ -84,42 +117,17 @@
             this.LeftPanel.Size = new System.Drawing.Size(115, 577);
             this.LeftPanel.TabIndex = 20;
             // 
-            // IconApp
-            // 
-            this.IconApp.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.IconApp.Image = ((System.Drawing.Image)(resources.GetObject("IconApp.Image")));
-            this.IconApp.Location = new System.Drawing.Point(12, 73);
-            this.IconApp.Name = "IconApp";
-            this.IconApp.Size = new System.Drawing.Size(83, 58);
-            this.IconApp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.IconApp.TabIndex = 0;
-            this.IconApp.TabStop = false;
-            // 
-            // OpenFileButton
-            // 
-            this.OpenFileButton.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.OpenFileButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.OpenFileButton.Image = ((System.Drawing.Image)(resources.GetObject("OpenFileButton.Image")));
-            this.OpenFileButton.Location = new System.Drawing.Point(39, 233);
-            this.OpenFileButton.Name = "OpenFileButton";
-            this.OpenFileButton.Size = new System.Drawing.Size(37, 37);
-            this.OpenFileButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.OpenFileButton.TabIndex = 0;
-            this.OpenFileButton.TabStop = false;
-            this.OpenFileButton.Click += new System.EventHandler(this.OpenFile_Click);
-            // 
             // SearchButton
             // 
             this.SearchButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.SearchButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.SearchButton.Image = ((System.Drawing.Image)(resources.GetObject("SearchButton.Image")));
-            this.SearchButton.Location = new System.Drawing.Point(812, 34);
+            this.SearchButton.Location = new System.Drawing.Point(324, 45);
             this.SearchButton.Name = "SearchButton";
             this.SearchButton.Size = new System.Drawing.Size(34, 34);
             this.SearchButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.SearchButton.TabIndex = 1;
             this.SearchButton.TabStop = false;
-            this.SearchButton.Click += new System.EventHandler(this.SearchButton_Click);
             // 
             // TotalTime
             // 
@@ -141,6 +149,16 @@
             this.CurrentTime.Name = "CurrentTime";
             this.CurrentTime.Size = new System.Drawing.Size(0, 18);
             this.CurrentTime.TabIndex = 17;
+            // 
+            // ImageMusicPlaying2
+            // 
+            this.ImageMusicPlaying2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.ImageMusicPlaying2.Location = new System.Drawing.Point(18, 0);
+            this.ImageMusicPlaying2.Name = "ImageMusicPlaying2";
+            this.ImageMusicPlaying2.Size = new System.Drawing.Size(127, 127);
+            this.ImageMusicPlaying2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.ImageMusicPlaying2.TabIndex = 17;
+            this.ImageMusicPlaying2.TabStop = false;
             // 
             // PlayPanel
             // 
@@ -201,16 +219,6 @@
             this.AutoNextMusic.TabIndex = 9;
             this.AutoNextMusic.TabStop = false;
             this.AutoNextMusic.Click += new System.EventHandler(this.AutoNext_Click);
-            // 
-            // ImageMusicPlaying2
-            // 
-            this.ImageMusicPlaying2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.ImageMusicPlaying2.Location = new System.Drawing.Point(18, 0);
-            this.ImageMusicPlaying2.Name = "ImageMusicPlaying2";
-            this.ImageMusicPlaying2.Size = new System.Drawing.Size(127, 127);
-            this.ImageMusicPlaying2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.ImageMusicPlaying2.TabIndex = 17;
-            this.ImageMusicPlaying2.TabStop = false;
             // 
             // SpeakerBar
             // 
@@ -304,8 +312,8 @@
             // 
             // ImageMusicPlaying1
             // 
-            this.ImageMusicPlaying1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.ImageMusicPlaying1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ImageMusicPlaying1.Location = new System.Drawing.Point(743, 203);
             this.ImageMusicPlaying1.Name = "ImageMusicPlaying1";
@@ -314,48 +322,30 @@
             this.ImageMusicPlaying1.TabIndex = 18;
             this.ImageMusicPlaying1.TabStop = false;
             // 
-            // Trash
+            // CoverImage
             // 
-            this.Trash.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Trash.Image = ((System.Drawing.Image)(resources.GetObject("Trash.Image")));
-            this.Trash.Location = new System.Drawing.Point(26, 499);
-            this.Trash.Name = "Trash";
-            this.Trash.Size = new System.Drawing.Size(50, 46);
-            this.Trash.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.Trash.TabIndex = 2;
-            this.Trash.TabStop = false;
+            this.CoverImage.Dock = System.Windows.Forms.DockStyle.Top;
+            this.CoverImage.Location = new System.Drawing.Point(115, 0);
+            this.CoverImage.Name = "CoverImage";
+            this.CoverImage.Size = new System.Drawing.Size(867, 104);
+            this.CoverImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.CoverImage.TabIndex = 21;
+            this.CoverImage.TabStop = false;
             // 
-            // TopPanel
+            // SearchBox
             // 
-            this.TopPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
-            this.TopPanel.Controls.Add(this.SearchTextBox);
-            this.TopPanel.Controls.Add(this.SearchButton);
-            this.TopPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.TopPanel.Location = new System.Drawing.Point(115, 0);
-            this.TopPanel.Name = "TopPanel";
-            this.TopPanel.Size = new System.Drawing.Size(867, 100);
-            this.TopPanel.TabIndex = 21;
-            // 
-            // SearchTextBox
-            // 
-            this.SearchTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.SearchTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
-            this.SearchTextBox.Font = new System.Drawing.Font("Century Gothic", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SearchTextBox.ForeColor = System.Drawing.Color.White;
-            this.SearchTextBox.Location = new System.Drawing.Point(18, 34);
-            this.SearchTextBox.Name = "SearchTextBox";
-            this.SearchTextBox.Size = new System.Drawing.Size(788, 30);
-            this.SearchTextBox.TabIndex = 0;
-            this.SearchTextBox.TextChanged += new System.EventHandler(this.SearchTextBox_TextChanged);
-            // 
-            // listBox1
-            // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 16;
-            this.listBox1.Location = new System.Drawing.Point(148, 329);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(589, 84);
-            this.listBox1.TabIndex = 22;
+            this.SearchBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.SearchBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(14)))), ((int)(((byte)(14)))));
+            this.SearchBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.SearchBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SearchBox.ForeColor = System.Drawing.SystemColors.Window;
+            this.SearchBox.Location = new System.Drawing.Point(386, 45);
+            this.SearchBox.Name = "SearchBox";
+            this.SearchBox.Size = new System.Drawing.Size(324, 26);
+            this.SearchBox.TabIndex = 22;
+            this.SearchBox.TextChanged += new System.EventHandler(this.SearchBox_TextChanged);
+            this.SearchBox.Enter += new System.EventHandler(this.SearchBox_Enter);
+            this.SearchBox.Leave += new System.EventHandler(this.SearchBox_Leave);
             // 
             // PlaylistForm
             // 
@@ -363,8 +353,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(14)))), ((int)(((byte)(14)))));
             this.ClientSize = new System.Drawing.Size(982, 577);
-            this.Controls.Add(this.listBox1);
-            this.Controls.Add(this.TopPanel);
+            this.Controls.Add(this.SearchBox);
+            this.Controls.Add(this.SearchButton);
+            this.Controls.Add(this.CoverImage);
             this.Controls.Add(this.PlayPanel);
             this.Controls.Add(this.ImageMusicPlaying1);
             this.Controls.Add(this.LeftPanel);
@@ -374,16 +365,17 @@
             this.Name = "PlaylistForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Playlist";
-            this.LeftPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.Trash)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.IconApp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.OpenFileButton)).EndInit();
+            this.LeftPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.SearchButton)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ImageMusicPlaying2)).EndInit();
             this.PlayPanel.ResumeLayout(false);
             this.PlayPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RepeatingButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.OnRepeating)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.AutoNextMusic)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ImageMusicPlaying2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SpeakerBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SpeakerButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PreviousButton)).EndInit();
@@ -392,10 +384,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.MusicBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.OnAutoNext)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ImageMusicPlaying1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Trash)).EndInit();
-            this.TopPanel.ResumeLayout(false);
-            this.TopPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CoverImage)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -419,11 +410,9 @@
         private System.Windows.Forms.PictureBox PlayPauseButton;
         private System.Windows.Forms.TrackBar MusicBar;
         private System.Windows.Forms.PictureBox ImageMusicPlaying1;
+        private System.Windows.Forms.PictureBox CoverImage;
         private System.Windows.Forms.PictureBox OnAutoNext;
         private System.Windows.Forms.PictureBox OnRepeating;
-        private System.Windows.Forms.Panel TopPanel;
-        private System.Windows.Forms.TextBox SearchTextBox;
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.TextBox SearchBox;
     }
 }
-

@@ -6,9 +6,9 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Linq;
 using NAudio.Wave;
 using Playlist.Properties;
 
@@ -28,10 +28,10 @@ namespace Playlist
         {
             PlayMusicList = new Playlist();
             PlayMusicList.StopAndDisposePlayerDevice();
-            PlayMusicList.StartPlayingFile += StartNewMusic;
+            PlayMusicList.NewAudioFile += StartNewMusic;
             PlayMusicList.FinishPlayingFile += EndMusic;
             PlayMusicList.Tick += TimerTick;
-            PlayMusicList.StartToPlay();
+            PlayMusicList.PrepareToPlay();
             PlayMusicList.Pause();
 
             this.Controls.Remove(this.Controls["MusicList"]);
@@ -40,7 +40,7 @@ namespace Playlist
             {
                 MusicList.Name = "MusicList";
                 MusicList.Location = new Point(127, 150);
-                MusicList.UpperLimit = TopPanel.Location.Y + TopPanel.Height;
+                MusicList.UpperLimit = CoverImage.Location.Y + CoverImage.Height;
                 MusicList.LowerLimit = PlayPanel.Location.Y;
                 MusicList.Trash = Trash;
                 MusicList.PlayPause += PlayPause_Click;
@@ -72,7 +72,7 @@ namespace Playlist
         {
             if (!(PlayMusicList.AutoNext || PlayMusicList.Repeating))
                 PlayPauseButton.Image = Resources.PlayButton_Image;
-            
+
             MusicList.PlayClick(PlayMusicList.CurrentIndex);
 
             if (PlayMusicList.Repeating) MusicList.PlayClick(PlayMusicList.CurrentIndex);
@@ -82,9 +82,9 @@ namespace Playlist
         {
             ImageMusicPlaying1.Image = null;
             ImageMusicPlaying2.Image = null;
-            if (File.Exists(Path.Combine(MusicList.FilesPath, Path.GetFileNameWithoutExtension((MusicList.Current.Controls["ImageMusic" + PlayMusicList.CurrentIndex] as PictureBox).Tag.ToString()))))
+            if (File.Exists(Path.Combine(MusicList.FilesPath, Path.GetFileNameWithoutExtension((MusicList.Current.Controls["ImageMusic"] as PictureBox).Tag.ToString()))))
             {
-                ImageMusicPlaying1.Image = new Bitmap((MusicList.Current.Controls["ImageMusic" + PlayMusicList.CurrentIndex] as PictureBox).Image);
+                ImageMusicPlaying1.Image = new Bitmap((MusicList.Current.Controls["ImageMusic"] as PictureBox).Image);
                 ImageMusicPlaying2.Image = ImageMusicPlaying1.Image;
             }
         }
@@ -116,7 +116,7 @@ namespace Playlist
                 {
                     if (!System.IO.File.Exists(Path.Combine(MusicList.FilesPath, Path.GetFileName(File))))
                         System.IO.File.Copy(File, Path.Combine(MusicList.FilesPath, Path.GetFileName(File)));
-                }                
+                }
                 MusicList.PlayerDevice.StopAndDisposePlayerDevice();
                 ResetProperties();
             }
@@ -125,9 +125,9 @@ namespace Playlist
         // Nhấn nút Play
         private void PlayPause_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(PlayMusicList.CurrentFile))
+            if (!string.IsNullOrEmpty(PlayMusicList.CurrentNode.FileName))
             {
-                if (MusicBar.Maximum == MusicBar.Value) PlayMusicList.StartToPlay();
+                if (MusicBar.Maximum == MusicBar.Value) PlayMusicList.PrepareToPlay();
                 if (PlayMusicList.IsPlaying)
                 {
                     PlayMusicList.Pause();
@@ -144,19 +144,23 @@ namespace Playlist
 
         // Phát bài hát trước
         private void Previous_Click(object sender, EventArgs e)
-        { 
-            MusicList.PlayClick(PlayMusicList.CurrentIndex - 1);        
+        {
+            int Index = PlayMusicList.CurrentIndex - 1;
+            if (Index < 0) Index = PlayMusicList.Count - 1;
+            MusicList.PlayClick(Index);
         }
 
         // Phát bài hát sau
-        private void Next_Click(object sender, EventArgs e) 
-        { 
-            MusicList.PlayClick(PlayMusicList.CurrentIndex + 1);
+        private void Next_Click(object sender, EventArgs e)
+        {
+            int Index = PlayMusicList.CurrentIndex + 1;
+            if (Index > PlayMusicList.Count - 1) Index = 0;
+            MusicList.PlayClick(Index);
         }
 
         // Tự động phát bài tiếp theo
-        private void AutoNext_Click(object sender, EventArgs e) 
-        { 
+        private void AutoNext_Click(object sender, EventArgs e)
+        {
             PlayMusicList.AutoNext = !PlayMusicList.AutoNext;
             if (PlayMusicList.AutoNext) OnAutoNext.Visible = true;
             else OnAutoNext.Visible = false;
@@ -167,8 +171,8 @@ namespace Playlist
         }
 
         // Tự động lặp lại bài hát
-        private void Repeating_Click(object sender, EventArgs e) 
-        { 
+        private void Repeating_Click(object sender, EventArgs e)
+        {
             PlayMusicList.Repeating = !PlayMusicList.Repeating;
             if (PlayMusicList.Repeating) OnRepeating.Visible = true;
             else OnRepeating.Visible = false;
@@ -195,8 +199,10 @@ namespace Playlist
         }
 
         // Cuộn thanh phát nhạc
-        private void MusicBar_Scroll(object sender, EventArgs e) 
+        private void MusicBar_Scroll(object sender, EventArgs e)
         {
+            if (!PlayMusicList.IsPlaying) MusicList.PlayClick(PlayMusicList.CurrentIndex);
+
             PlayPauseButton.Image = Resources.PauseButton_Image;
             PlayMusicList.CurrentTime = MusicBar.Value;
             CurrentTime.Text = PlayMusicList.CurrentTime > 3600 ?
@@ -204,36 +210,36 @@ namespace Playlist
                 string.Format("{0:m\\:ss}", TimeSpan.FromSeconds(PlayMusicList.CurrentTime));
         }
 
-        private void SearchTextBox_TextChanged(object sender, EventArgs e)
+        // Bỏ dấu các kí tự tiếng Việt
+        public static string RemoveDiacritics(string Text)
         {
-            LoadData();
+            string NormalizedText = Text.Normalize(NormalizationForm.FormD);
+            Regex regex = new Regex(@"\p{IsCombiningDiacriticalMarks}+");
+            return regex.Replace(NormalizedText, string.Empty).Normalize(NormalizationForm.FormC);
         }
 
-        private void SearchButton_Click(object sender, EventArgs e)
+        private string[] TempMusicFiles; // Lưu tạm thời danh sách File nhạc trong MusicList
+        private void SearchBox_Enter(object sender, EventArgs e)
         {
-            LoadData();
+            TempMusicFiles = MusicList.MusicFiles;
         }
 
-        public void LoadData()
+        private void SearchBox_Leave(object sender, EventArgs e)
         {
-            string searchTerm = SearchTextBox.Text.ToLower();
-
-            string[] songArray = PlayMusicList.ToArray();
-
-            // Xóa tất cả các mục cũ khỏi ListBox trước khi hiển thị kết quả tìm kiếm mới
-            listBox1.Items.Clear();
-
-            foreach (string filePath in songArray)
-            {
-                string fileName = Path.GetFileNameWithoutExtension(filePath);
-
-                if (fileName.ToLower().Contains(searchTerm))
-                {
-                    listBox1.Items.Add(fileName);
-                }
-            }
+            MusicList.MusicFiles = TempMusicFiles;
+            MusicList.InitializeComponent();
         }
 
+        private void SearchBox_TextChanged(object sender, EventArgs e)
+        {
+            string SearchTerm = RemoveDiacritics(SearchBox.Text.ToLower().Trim());
+
+            List<string> Result = new List<string>();
+            foreach (string FileName in TempMusicFiles)
+                if (RemoveDiacritics(FileName.ToLower().Trim()).Contains(SearchTerm)) Result.Add(FileName);
+
+            MusicList.MusicFiles = Result.ToArray();
+            MusicList.InitializeComponent();
+        }
     }
 }
-
