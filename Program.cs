@@ -595,7 +595,6 @@ namespace Playlist
         /// Điều khiển nút PlayPause bên ngoài.
         /// </summary>
         public PictureBox PlayPauseButton { set; private get; }
-        public event EventHandler PlayPause;
 
         /// <summary>
         /// Sự kiện chọn một bài nhạc khác bài nhạc hiện tại.
@@ -630,7 +629,6 @@ namespace Playlist
             this.UpperLimit = 0;
             this.LowerLimit = 0;
             this.PlayPauseButton = null;
-            this.PlayPause = null;
             this.Trash = null;
             this.MusicFiles = null;
             this.ImageFiles = null;
@@ -735,6 +733,7 @@ namespace Playlist
                     else
                         MusicPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
                     MusicPanel.MouseDown += MusicPanel_MouseDown;
+                    MusicPanel.MouseMove += MusicPanel_MouseMove;
                     MusicPanel.MouseUp += MusicPanel_MouseUp;
 
                     ImageMusic.Location = new Point(25, 10);
@@ -822,10 +821,23 @@ namespace Playlist
                     this.Location = new Point(this.Location.X, this.Location.Y - 1);
         }
 
+        private bool Flag;
+        private int CursorLocationY;
+        private void MusicPanel_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (Flag)
+            {
+                this.Location = new Point(this.Location.X, Cursor.Position.Y - CursorLocationY + this.Location.Y);
+                MusicListPanel_Wheel(sender, new MouseEventArgs(MouseButtons.Left, 0, 0, 0, 0));
+            }
+            CursorLocationY = Cursor.Position.Y;
+        }
+
         private void MusicPanel_MouseDown(object sender, MouseEventArgs e)
         {
             Trash.Visible = true;
             Trash.BringToFront();
+            Flag = true;
         }
 
         private void MusicPanel_MouseUp(object sender, MouseEventArgs e)
@@ -856,6 +868,7 @@ namespace Playlist
                 this.InitializeComponent();
             }
             Trash.Visible = false;
+            Flag = false;
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,20 @@ namespace Playlist
         public PlaylistForm()
         {
             InitializeComponent();
+
             OnAutoNext.Visible = true;
             OnRepeating.Visible = false;
+            this.LostFocus += PlaylistForm_LostFocus;
+            SearchBox.LostFocus += PlaylistForm_LostFocus;
+            this.ActiveControl = null;
+            if (File.Exists(CoverImagePath)) CoverImage.Image = Image.FromFile(CoverImagePath);
+
             ResetProperties();
+        }
+
+        private void PlaylistForm_LostFocus(object sender, EventArgs e)
+        {
+            if (!SearchBox.ContainsFocus) this.Focus();
         }
 
         private void ResetProperties()
@@ -39,11 +51,10 @@ namespace Playlist
             this.Controls.Add(MusicList);
             {
                 MusicList.Name = "MusicList";
-                MusicList.Location = new Point(127, 150);
+                MusicList.Location = new Point(127, 170);
                 MusicList.UpperLimit = CoverImage.Location.Y + CoverImage.Height;
                 MusicList.LowerLimit = PlayPanel.Location.Y;
                 MusicList.Trash = Trash;
-                MusicList.PlayPause += PlayPause_Click;
                 MusicList.PlayPauseButton = this.PlayPauseButton;
                 MusicList.ChoosingAnotherMusic += MusicList_ChoosingAnotherMusic;
             }
@@ -51,7 +62,8 @@ namespace Playlist
             MusicList.InitializeComponent();
         }
 
-        MusicListPanel MusicList;
+        private readonly string CoverImagePath = Path.Combine(Directory.GetCurrentDirectory(), "CoverImage");
+        private MusicListPanel MusicList;
         private Playlist PlayMusicList; // Dùng để phát nhạc tích hợp danh sách liên kết đôi
         private int VolumeWas; // Dùng để hồi phục lại vị trí cũ của thanh âm lượng khi nhấn nút loa
 
@@ -60,6 +72,8 @@ namespace Playlist
         {
             MusicBar.Maximum = PlayMusicList.TotalTime;
             MusicBar.Value = 0;
+
+            MusicName.Text = Path.GetFileNameWithoutExtension(PlayMusicList.CurrentNode.FileName);
 
             CurrentTime.Text = "0:00";
             TotalTime.Text = PlayMusicList.TotalTime > 3600 ?
@@ -226,10 +240,14 @@ namespace Playlist
 
         private void SearchBox_Leave(object sender, EventArgs e)
         {
-            MusicList.MusicFiles = TempMusicFiles;
-            MusicList.InitializeComponent();
+            if (MusicList.MusicFiles != TempMusicFiles)
+            {
+                MusicList.MusicFiles = TempMusicFiles;
+                MusicList.InitializeComponent();
+            }
         }
 
+        // Tìm kiếm nhạc
         private void SearchBox_TextChanged(object sender, EventArgs e)
         {
             string SearchTerm = RemoveDiacritics(SearchBox.Text.ToLower().Trim());
@@ -241,5 +259,28 @@ namespace Playlist
             MusicList.MusicFiles = Result.ToArray();
             MusicList.InitializeComponent();
         }
+
+        private void CoverImage_RightClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                OpenFileDialog OpenImage = new OpenFileDialog()
+                {
+                    Title = "Open Your Cover Image",
+                    Filter = "Image Files(*.jpg; *.png; *.gif; *.bmp)| *.jpg; *.png; *.gif; *.bmp",
+                    Multiselect = false
+                };
+                if (OpenImage.ShowDialog() == DialogResult.OK)
+                {
+                    CoverImage.Image?.Dispose();
+                    CoverImage.Image = Image.FromFile(OpenImage.FileName);
+
+                    if (File.Exists(CoverImagePath)) File.Delete(CoverImagePath);
+
+                    File.Copy(OpenImage.FileName, CoverImagePath);
+                }
+            }
+        }
     }
 }
+
