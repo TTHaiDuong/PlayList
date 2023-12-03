@@ -330,6 +330,7 @@
             // CoverImage
             // 
             this.CoverImage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
+            this.CoverImage.Dock = System.Windows.Forms.DockStyle.Top;
             this.CoverImage.InitialImage = null;
             this.CoverImage.Location = new System.Drawing.Point(105, 0);
             this.CoverImage.Name = "CoverImage";
@@ -369,13 +370,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(14)))), ((int)(((byte)(14)))));
             this.ClientSize = new System.Drawing.Size(1382, 753);
-            this.Controls.Add(this.ImageMusicPlaying1);
-            this.Controls.Add(this.SearchBox);
             this.Controls.Add(this.SearchButton);
+            this.Controls.Add(this.SearchBox);
+            this.Controls.Add(this.CoverImage);
             this.Controls.Add(this.PlayPanel);
             this.Controls.Add(this.LeftPanel);
+            this.Controls.Add(this.ImageMusicPlaying1);
             this.Controls.Add(this.Trash);
-            this.Controls.Add(this.CoverImage);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(1400, 800);
             this.Name = "PlaylistForm";

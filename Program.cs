@@ -101,7 +101,7 @@ namespace Playlist
         /// <summary>
         /// Chỉ số File âm thanh hiện tại trong Playlist dùng để phát.
         /// </summary>
-        public int CurrentIndex { get => FindIndex(CurrentNode.FileName); }
+        public int CurrentIndex { get => CurrentNode != null ? FindIndex(CurrentNode.FileName) : 0; }
 
         /// <summary>
         /// Số lượng phần tử trong Playlist
@@ -520,8 +520,9 @@ namespace Playlist
 
             if (PlayerDevice == null || FileReader == null || CurrentTime == TotalTime)
             {
+                NewAudioFile?.Invoke(this, new EventArgs());
                 PrepareToPlay();
-                PlayerDevice.Play();
+                PlayerDevice?.Play();
             }
             PlayerDevice?.Play();
             TimerTick?.Start();
@@ -547,7 +548,7 @@ namespace Playlist
             if (CurrentNode?.Next != null)
                 CurrentNode = CurrentNode.Next;
             PrepareToPlay();
-            PlayerDevice.Play();
+            PlayerDevice?.Play();
         }
 
         /// <summary>
@@ -558,7 +559,7 @@ namespace Playlist
             if (CurrentNode?.Previous != null)
                 CurrentNode = CurrentNode.Previous;
             PrepareToPlay();
-            PlayerDevice.Play();
+            PlayerDevice?.Play();
         }
 
         /// <summary>
@@ -644,9 +645,7 @@ namespace Playlist
 
             PlayerDevice.FromArray(MusicFiles);
 
-            if (PlayerDevice.CurrentNode != null)
-                this.PreviousMusic = PlayerDevice.CurrentNode.FileName;
-
+            if (PlayerDevice.CurrentNode != null) this.PreviousMusic = PlayerDevice.CurrentNode.FileName;
         }
 
         /// <summary>
@@ -823,6 +822,7 @@ namespace Playlist
 
         private bool Flag;
         private int CursorLocationY;
+        private int ThisLocationY;
         private void MusicPanel_MouseMove(object sender, MouseEventArgs e)
         {
             if (Flag)
@@ -838,6 +838,7 @@ namespace Playlist
             Trash.Visible = true;
             Trash.BringToFront();
             Flag = true;
+            ThisLocationY = this.Location.Y;
         }
 
         private void MusicPanel_MouseUp(object sender, MouseEventArgs e)
@@ -851,7 +852,7 @@ namespace Playlist
                 File.Delete(MusicPanel.Tag.ToString());
                 PictureBox DisposeImage = MusicPanel.Controls["ImageMusic"] as PictureBox;
                 DisposeImage.Image.Dispose();
-
+                ChoosingAnotherMusic?.Invoke(this, EventArgs.Empty);
                 try
                 {
                     if (File.Exists(Path.Combine(FilesPath, Path.GetFileNameWithoutExtension(MusicPanel.Tag.ToString()))))
@@ -866,6 +867,12 @@ namespace Playlist
                 MusicFiles = EditMusicsList.Where(FileName => FileName != null).ToArray();
 
                 this.InitializeComponent();
+
+                while (this.Location.Y != ThisLocationY)
+                {
+                    if (this.Location.Y > ThisLocationY) this.Location = new Point(this.Location.X, this.Location.Y - 1);
+                    else this.Location = new Point(this.Location.X, this.Location.Y + 1);
+                }
             }
             Trash.Visible = false;
             Flag = false;

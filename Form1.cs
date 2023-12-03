@@ -98,8 +98,11 @@ namespace Playlist
             ImageMusicPlaying2.Image = null;
             if (File.Exists(Path.Combine(MusicList.FilesPath, Path.GetFileNameWithoutExtension((MusicList.Current.Controls["ImageMusic"] as PictureBox).Tag.ToString()))))
             {
-                ImageMusicPlaying1.Image = new Bitmap((MusicList.Current.Controls["ImageMusic"] as PictureBox).Image);
-                ImageMusicPlaying2.Image = ImageMusicPlaying1.Image;
+                try
+                {
+                    ImageMusicPlaying1.Image = new Bitmap((MusicList.Current.Controls["ImageMusic"] as PictureBox).Image);
+                    ImageMusicPlaying2.Image = ImageMusicPlaying1.Image;
+                } catch { }
             }
         }
 
@@ -139,7 +142,7 @@ namespace Playlist
         // Nhấn nút Play
         private void PlayPause_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(PlayMusicList.CurrentNode.FileName))
+            if (!string.IsNullOrEmpty(PlayMusicList.CurrentNode?.FileName))
             {
                 if (MusicBar.Maximum == MusicBar.Value) PlayMusicList.PrepareToPlay();
                 if (PlayMusicList.IsPlaying)
@@ -161,7 +164,7 @@ namespace Playlist
         {
             int Index = PlayMusicList.CurrentIndex - 1;
             if (Index < 0) Index = PlayMusicList.Count - 1;
-            MusicList.PlayClick(Index);
+            if (PlayMusicList.Count > 0) MusicList.PlayClick(Index);
         }
 
         // Phát bài hát sau
@@ -169,7 +172,7 @@ namespace Playlist
         {
             int Index = PlayMusicList.CurrentIndex + 1;
             if (Index > PlayMusicList.Count - 1) Index = 0;
-            MusicList.PlayClick(Index);
+            if (PlayMusicList.Count > 0) MusicList.PlayClick(Index);
         }
 
         // Tự động phát bài tiếp theo
@@ -180,8 +183,7 @@ namespace Playlist
             else OnAutoNext.Visible = false;
             OnRepeating.Visible = false;
 
-            if (PlayMusicList.AutoNext && MusicBar.Value == MusicBar.Maximum)
-                MusicList.PlayClick(PlayMusicList.CurrentIndex + 1);
+            if (PlayMusicList.AutoNext && MusicBar.Value == MusicBar.Maximum) Next_Click(sender, e);
         }
 
         // Tự động lặp lại bài hát
@@ -262,7 +264,7 @@ namespace Playlist
 
         private void CoverImage_RightClick(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            if (e.Button == MouseButtons.Right && false)
             {
                 OpenFileDialog OpenImage = new OpenFileDialog()
                 {
