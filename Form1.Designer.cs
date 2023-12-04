@@ -355,6 +355,7 @@
             // 
             // Trash
             // 
+            this.Trash.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.Trash.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Trash.Image = ((System.Drawing.Image)(resources.GetObject("Trash.Image")));
             this.Trash.Location = new System.Drawing.Point(26, 499);
@@ -378,7 +379,7 @@
             this.Controls.Add(this.ImageMusicPlaying1);
             this.Controls.Add(this.Trash);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(1400, 800);
+            this.MinimumSize = new System.Drawing.Size(700, 500);
             this.Name = "PlaylistForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Playlist";

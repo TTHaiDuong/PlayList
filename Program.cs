@@ -670,7 +670,7 @@ namespace Playlist
                     // Hình đại diện bài hát
                     //
                     ImageMusic.Name = "ImageMusic";
-                    ImageMusic.Size = new Size(30, 30);
+                    ImageMusic.Size = new Size(46, 46);
                     ImageMusic.SizeMode = PictureBoxSizeMode.Zoom;
                     ImageMusic.Tag = MusicFiles[i];
                     if (File.Exists(Path.Combine(FilesPath, Path.GetFileNameWithoutExtension(ImageMusic.Tag.ToString()))))
@@ -735,7 +735,7 @@ namespace Playlist
                     MusicPanel.MouseMove += MusicPanel_MouseMove;
                     MusicPanel.MouseUp += MusicPanel_MouseUp;
 
-                    ImageMusic.Location = new Point(25, 10);
+                    ImageMusic.Location = new Point(15, 2);
                     PlayButton.Location = new Point(110, 15);
                     MusicName.Location = new Point(175, 0);
                     TotalTime.Location = new Point(350, 0);
