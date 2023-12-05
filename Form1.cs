@@ -28,15 +28,16 @@ namespace Playlist
             this.ActiveControl = null;
             if (File.Exists(CoverImagePath)) CoverImage.Image = Image.FromFile(CoverImagePath);
 
-
             ResetProperties();
         }
 
+        // Tắt đường viền của thanh trượt khi focus bằng cách chuyển focus sang form chính.
         private void PlaylistForm_LostFocus(object sender, EventArgs e)
         {
             if (!SearchBox.ContainsFocus) this.Focus();
         }
 
+        // Reset lại các thuộc tính điều khiển chung của app
         private void ResetProperties()
         {
             PlayMusicList = new Playlist();
@@ -63,8 +64,9 @@ namespace Playlist
             MusicList.InitializeComponent();
         }
 
+        // Đường dẫn của file dùng làm hình nền (tính năng đã dừng phát triển)
         private readonly string CoverImagePath = Path.Combine(Directory.GetCurrentDirectory(), "CoverImage");
-        private MusicListPanel MusicList;
+        private MusicListPanel MusicList; // Hiển thị danh sách bài hát (hình ảnh, nút play, tên, thời lượng)
         private Playlist PlayMusicList; // Dùng để phát nhạc tích hợp danh sách liên kết đôi
         private int VolumeWas; // Dùng để hồi phục lại vị trí cũ của thanh âm lượng khi nhấn nút loa
 
@@ -93,6 +95,7 @@ namespace Playlist
             if (PlayMusicList.Repeating) MusicList.PlayClick(PlayMusicList.CurrentIndex);
         }
 
+        // Thiết đặt hình ảnh hiển thị khi chọn một bài hát mới.
         private void MusicList_ChoosingAnotherMusic(object sender, EventArgs e)
         {
             ImageMusicPlaying1.Image = null;
@@ -235,12 +238,13 @@ namespace Playlist
             return regex.Replace(NormalizedText, string.Empty).Normalize(NormalizationForm.FormC);
         }
 
-        private string[] TempMusicFiles; // Lưu tạm thời danh sách File nhạc trong MusicList
+        private string[] TempMusicFiles; // Lưu tạm thời danh sách File nhạc trong MusicList để hoàn nguyên danh sách âm nhạc
         private void SearchBox_Enter(object sender, EventArgs e)
         {
-            TempMusicFiles = MusicList.MusicFiles;
+            if (MusicList.MusicFiles.Length == PlayMusicList.Count) TempMusicFiles = MusicList.MusicFiles;
         }
 
+        // Sự kiện rời khỏi SearchBox hoàn nguyên lại danh sách âm nhạc
         private void SearchBox_Leave(object sender, EventArgs e)
         {
             if (MusicList.MusicFiles != TempMusicFiles)
@@ -253,6 +257,7 @@ namespace Playlist
         // Tìm kiếm nhạc
         private void SearchBox_TextChanged(object sender, EventArgs e)
         {
+            // Chuẩn hoá ký tự tìm kiếm sang toàn bộ ký tự chữ thường, không dấu tiếng Việt
             string SearchTerm = RemoveDiacritics(SearchBox.Text.ToLower().Trim());
 
             List<string> Result = new List<string>();
@@ -262,9 +267,11 @@ namespace Playlist
             MusicList.MusicFiles = Result.ToArray();
             MusicList.InitializeComponent();
 
+            // Nếu nội dung SearchBox rỗng thì trả lại danh sách ban đầu
             if (string.IsNullOrEmpty(SearchBox.Text)) SearchBox_Leave(sender, e); 
         }
 
+        // Nhấn chuột phải vào ảnh bìa app (tính năng đã dừng phát triển)
         private void CoverImage_RightClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right && false)

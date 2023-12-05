@@ -746,6 +746,7 @@ namespace Playlist
                 }
         }
 
+        // Sự kiện nhấn chuột phải vào hình ảnh đại diện bài hát
         private void ImageMusic_RightClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -767,11 +768,14 @@ namespace Playlist
                 }
             }
         }
+
+        // Sự kiện khi nhấn chuột vào nút play trên danh sách bài hát (sử dụng cho bên ngoài lớp)
         public void PlayClick(int i)
         {
             PlayButton_Click(PlayerDevice.Find(i).FileName);
         }
 
+        // Sự kiện khi nhấn chuột vào nút play trên danh sách bài hát
         private void PlayButton_Click(string FileName)
         {
             if (this.Controls[FileName] != null && this.Controls[FileName].Controls["PlayButton"] is PictureBox PlayButton)
@@ -807,6 +811,8 @@ namespace Playlist
                 PreviousMusic = FileName;
             };
         }
+
+        // Sự kiện lăn nút lăn chuột trên danh sách
         private void MusicListPanel_Wheel(object sender, MouseEventArgs e)
         {
             if (e.Delta > 0) this.Location = new Point(this.Location.X, this.Location.Y + 10);
@@ -820,9 +826,9 @@ namespace Playlist
                     this.Location = new Point(this.Location.X, this.Location.Y - 1);
         }
 
-        private bool Flag;
-        private int CursorLocationY;
-        private int ThisLocationY;
+        private bool Flag; // "Cờ" khi mà sự kiện nhấn chuột được bắt thì sự kiện chuột di chuyển mới được thực hiện
+        private int CursorLocationY; // Dùng để hỗ trợ khi sử dụng chuột để kéo thay đổi vị trí danh sách
+        private int ThisLocationY; // Dùng để khôi phục vị trí danh sách khi xoá một item trong danh sách
         private void MusicPanel_MouseMove(object sender, MouseEventArgs e)
         {
             if (Flag)
@@ -833,6 +839,7 @@ namespace Playlist
             CursorLocationY = Cursor.Position.Y;
         }
 
+        // Xử lý sự kiện khi nhấn chuột vào panel chứa thông tin bài hát
         private void MusicPanel_MouseDown(object sender, MouseEventArgs e)
         {
             Trash.Visible = true;
@@ -841,14 +848,18 @@ namespace Playlist
             ThisLocationY = this.Location.Y;
         }
 
+        // Xử lý sự kiện khi thả nút chuột sau khi nhấn nút vào một panel chứa thông tin bài hát
         private void MusicPanel_MouseUp(object sender, MouseEventArgs e)
         {
             Panel MusicPanel = sender as Panel;
+            // Xử lý khi con trỏ chuột nằm bên trên PictureBox Trash (thùng rác) 
             if (Trash.Bounds.Contains(Trash.Parent.PointToClient(Cursor.Position)))
             {
+                // Nếu xoá bài hát đang được phát
                 if (MusicPanel.Name == PlayerDevice.CurrentNode.FileName)
                     PlayerDevice.StopAndDisposePlayerDevice();
 
+                // Xoá các tệp liên quan đến bài hát
                 File.Delete(MusicPanel.Tag.ToString());
                 PictureBox DisposeImage = MusicPanel.Controls["ImageMusic"] as PictureBox;
                 DisposeImage.Image.Dispose();
@@ -860,6 +871,7 @@ namespace Playlist
                 }
                 catch { }
 
+                // Tạo lại danh sách hiển thị các bài hát
                 List<string> EditMusicsList = new List<string>();
                 for (int i = 0; i < MusicFiles.Length; i++)
                     if (MusicFiles[i] != MusicPanel.Name) EditMusicsList.Add(MusicFiles[i]);
@@ -867,6 +879,7 @@ namespace Playlist
 
                 this.InitializeComponent();
 
+                // Trả lại vị trí ban đầu của danh sách này khi thực hiện xoá
                 while (this.Location.Y != ThisLocationY)
                 {
                     if (this.Location.Y > ThisLocationY) this.Location = new Point(this.Location.X, this.Location.Y - 1);
