@@ -70,8 +70,8 @@ namespace Playlist
     /// </summary>
     public class Playlist : IEnumerable
     {
-        private WaveOut PlayerDevice;
-        private AudioFileReader FileReader;
+        private WaveOut PlayerDevice; // cái loa
+        private AudioFileReader FileReader; // đầu đọc
 
         /// <summary>
         /// Sự kiện khi Playlist bắt đầu phát một File.
@@ -860,11 +860,10 @@ namespace Playlist
                 }
                 catch { }
 
-                string[] EditMusicsList = MusicFiles;
-                for (int i = 0; i < EditMusicsList.Length; i++)
-                    if (EditMusicsList[i] == MusicPanel.Name) EditMusicsList[i] = null;
-
-                MusicFiles = EditMusicsList.Where(FileName => FileName != null).ToArray();
+                List<string> EditMusicsList = new List<string>();
+                for (int i = 0; i < MusicFiles.Length; i++)
+                    if (MusicFiles[i] != MusicPanel.Name) EditMusicsList.Add(MusicFiles[i]);
+                MusicFiles = EditMusicsList.ToArray();
 
                 this.InitializeComponent();
 

@@ -167,7 +167,6 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
-    <None Include="Playlist_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -192,7 +191,6 @@
     <None Include="Resources\searching-bar.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="lottie_sharp.ico" />
     <None Include="Resources\plus.png" />
     <None Include="Resources\Wave.webm" />
     <None Include="Resources\698fc610-f4be-4e74-b78f-baf38b7f63ab.gif" />

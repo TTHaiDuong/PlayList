@@ -28,6 +28,7 @@ namespace Playlist
             this.ActiveControl = null;
             if (File.Exists(CoverImagePath)) CoverImage.Image = Image.FromFile(CoverImagePath);
 
+
             ResetProperties();
         }
 
@@ -256,10 +257,12 @@ namespace Playlist
 
             List<string> Result = new List<string>();
             foreach (string FileName in TempMusicFiles)
-                if (RemoveDiacritics(FileName.ToLower().Trim()).Contains(SearchTerm)) Result.Add(FileName);
+                if (!string.IsNullOrEmpty(FileName) && RemoveDiacritics(FileName.ToLower().Trim()).Contains(SearchTerm)) Result.Add(FileName);
 
             MusicList.MusicFiles = Result.ToArray();
             MusicList.InitializeComponent();
+
+            if (string.IsNullOrEmpty(SearchBox.Text)) SearchBox_Leave(sender, e); 
         }
 
         private void CoverImage_RightClick(object sender, MouseEventArgs e)
