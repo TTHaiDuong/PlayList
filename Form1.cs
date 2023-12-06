@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -238,20 +239,20 @@ namespace Playlist
             return regex.Replace(NormalizedText, string.Empty).Normalize(NormalizationForm.FormC);
         }
 
+        private bool Flag;
         private string[] TempMusicFiles; // Lưu tạm thời danh sách File nhạc trong MusicList để hoàn nguyên danh sách âm nhạc
         private void SearchBox_Enter(object sender, EventArgs e)
         {
-            if (MusicList.MusicFiles.Length == PlayMusicList.Count) TempMusicFiles = MusicList.MusicFiles;
+            if (!Flag) TempMusicFiles = MusicList.MusicFiles;
+            Flag = true;
         }
 
         // Sự kiện rời khỏi SearchBox hoàn nguyên lại danh sách âm nhạc
         private void SearchBox_Leave(object sender, EventArgs e)
         {
-            if (MusicList.MusicFiles != TempMusicFiles)
-            {
-                MusicList.MusicFiles = TempMusicFiles;
-                MusicList.InitializeComponent();
-            }
+            MusicList.MusicFiles = TempMusicFiles;
+            MusicList.InitializeComponent();
+            Flag = false;
         }
 
         // Tìm kiếm nhạc
@@ -268,7 +269,7 @@ namespace Playlist
             MusicList.InitializeComponent();
 
             // Nếu nội dung SearchBox rỗng thì trả lại danh sách ban đầu
-            if (string.IsNullOrEmpty(SearchBox.Text)) SearchBox_Leave(sender, e); 
+            if (string.IsNullOrWhiteSpace(SearchBox.Text)) SearchBox_Leave(sender, e);
         }
 
         // Nhấn chuột phải vào ảnh bìa app (tính năng đã dừng phát triển)

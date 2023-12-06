@@ -659,6 +659,7 @@ namespace Playlist
 
             if (MusicFiles.Length > 0)
                 for (int i = 0; i < MusicFiles.Length; i++)
+                    if (File.Exists(MusicFiles[i]))
                 {
                     // Tạo Panel cho một bài hát và các thành phần của nó
                     Panel MusicPanel = new Panel();
@@ -708,10 +709,10 @@ namespace Playlist
                     TotalTime.Name = "TotalTime";
                     TotalTime.Size = new Size(50, 50);
                     TotalTime.Font = new Font("Roboto", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                    AudioFileReader ReadTime = new AudioFileReader(MusicFiles[i]);
-                    TotalTime.Text = ReadTime.TotalTime.TotalHours >= 1 ?
-                        string.Format("{0:h\\:mm\\:ss}", ReadTime.TotalTime) :
-                        string.Format("{0:m\\:ss}", ReadTime.TotalTime);
+                        AudioFileReader ReadTime = new AudioFileReader(MusicFiles[i]);
+                        TotalTime.Text = ReadTime.TotalTime.TotalHours >= 1 ?
+                            string.Format("{0:h\\:mm\\:ss}", ReadTime.TotalTime) :
+                            string.Format("{0:m\\:ss}", ReadTime.TotalTime);
                     TotalTime.TextAlign = ContentAlignment.MiddleCenter;
                     TotalTime.ForeColor = Color.White;
                     TotalTime.AutoSize = false;
@@ -860,7 +861,7 @@ namespace Playlist
                     PlayerDevice.StopAndDisposePlayerDevice();
 
                 // Xoá các tệp liên quan đến bài hát
-                File.Delete(MusicPanel.Tag.ToString());
+                File.Delete(MusicPanel.Name);
                 PictureBox DisposeImage = MusicPanel.Controls["ImageMusic"] as PictureBox;
                 DisposeImage.Image.Dispose();
                 ChoosingAnotherMusic?.Invoke(this, EventArgs.Empty);
@@ -871,12 +872,8 @@ namespace Playlist
                 }
                 catch { }
 
-                // Tạo lại danh sách hiển thị các bài hát
-                List<string> EditMusicsList = new List<string>();
-                for (int i = 0; i < MusicFiles.Length; i++)
-                    if (MusicFiles[i] != MusicPanel.Name) EditMusicsList.Add(MusicFiles[i]);
-                MusicFiles = EditMusicsList.ToArray();
-
+                MusicFiles = Directory.GetFiles(FilesPath).Where(File => Path.GetExtension(File).Equals(".mp3", StringComparison.OrdinalIgnoreCase)).ToArray(); ;
+                PlayerDevice.FromArray(MusicFiles);
                 this.InitializeComponent();
 
                 // Trả lại vị trí ban đầu của danh sách này khi thực hiện xoá
