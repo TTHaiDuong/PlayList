@@ -311,8 +311,6 @@
             this.SearchBox.Size = new System.Drawing.Size(324, 26);
             this.SearchBox.TabIndex = 0;
             this.SearchBox.TextChanged += new System.EventHandler(this.SearchBox_TextChanged);
-            this.SearchBox.Enter += new System.EventHandler(this.SearchBox_Enter);
-            this.SearchBox.Leave += new System.EventHandler(this.SearchBox_Leave);
             // 
             // SearchButton
             // 

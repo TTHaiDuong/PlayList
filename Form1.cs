@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -22,6 +21,7 @@ namespace Playlist
         {
             InitializeComponent();
 
+            Control.CheckForIllegalCrossThreadCalls = false;
             OnAutoNext.Visible = true;
             OnRepeating.Visible = false;
             this.LostFocus += PlaylistForm_LostFocus;
@@ -30,6 +30,7 @@ namespace Playlist
             if (File.Exists(CoverImagePath)) CoverImage.Image = Image.FromFile(CoverImagePath);
 
             ResetProperties();
+            PlayMusicList.Volume = 100;
         }
 
         // Tắt đường viền của thanh trượt khi focus bằng cách chuyển focus sang form chính.
@@ -107,7 +108,8 @@ namespace Playlist
                 {
                     ImageMusicPlaying1.Image = new Bitmap((MusicList.Current.Controls["ImageMusic"] as PictureBox).Image);
                     ImageMusicPlaying2.Image = ImageMusicPlaying1.Image;
-                } catch { }
+                }
+                catch { }
             }
         }
 
@@ -239,25 +241,12 @@ namespace Playlist
             return regex.Replace(NormalizedText, string.Empty).Normalize(NormalizationForm.FormC);
         }
 
-        private bool Flag;
-        private string[] TempMusicFiles; // Lưu tạm thời danh sách File nhạc trong MusicList để hoàn nguyên danh sách âm nhạc
-        private void SearchBox_Enter(object sender, EventArgs e)
-        {
-            if (!Flag) TempMusicFiles = MusicList.MusicFiles;
-            Flag = true;
-        }
-
-        // Sự kiện rời khỏi SearchBox hoàn nguyên lại danh sách âm nhạc
-        private void SearchBox_Leave(object sender, EventArgs e)
-        {
-            MusicList.MusicFiles = TempMusicFiles;
-            MusicList.InitializeComponent();
-            Flag = false;
-        }
-
         // Tìm kiếm nhạc
         private void SearchBox_TextChanged(object sender, EventArgs e)
         {
+            string[] TempMusicFiles = new string[PlayMusicList.Count];
+            if (MusicList.MusicFiles.Length == PlayMusicList.Count) TempMusicFiles = MusicList.MusicFiles;
+
             // Chuẩn hoá ký tự tìm kiếm sang toàn bộ ký tự chữ thường, không dấu tiếng Việt
             string SearchTerm = RemoveDiacritics(SearchBox.Text.ToLower().Trim());
 
@@ -268,8 +257,8 @@ namespace Playlist
             MusicList.MusicFiles = Result.ToArray();
             MusicList.InitializeComponent();
 
-            // Nếu nội dung SearchBox rỗng thì trả lại danh sách ban đầu
-            if (string.IsNullOrWhiteSpace(SearchBox.Text)) SearchBox_Leave(sender, e);
+            MusicList.MusicFiles = TempMusicFiles;
+            if (string.IsNullOrEmpty(SearchBox.Text)) MusicList.InitializeComponent();
         }
 
         // Nhấn chuột phải vào ảnh bìa app (tính năng đã dừng phát triển)

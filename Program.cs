@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Playlist
@@ -86,7 +87,7 @@ namespace Playlist
         /// Sự kiện Tick của Timer dùng để kích hoạt thanh trượt.
         /// </summary>
         public event EventHandler Tick;
-        private readonly Timer TimerTick = new Timer();
+        private readonly System.Windows.Forms.Timer TimerTick = new System.Windows.Forms.Timer();
 
         /// <summary>
         /// Dùng để trỏ tới hai phần tử đầu hoặc cuối của Playlist.
@@ -137,7 +138,7 @@ namespace Playlist
         }
 
         /// <summary>
-        /// Vị trí phát hiện tại của File (đơn vị: giây).
+        /// Thời gian hiện tại đang phát hiện tại của File (đơn vị: giây).
         /// </summary>
         public int CurrentTime
         {
@@ -490,14 +491,14 @@ namespace Playlist
         private void OnPlaybackStopped(object sender, StoppedEventArgs e)
         {
             TimerTick.Stop();
-            if (ContainerRepeating)
-            {
-                PrepareToPlay();
-                Play();
-            }
-            if (ContainerAutoNext)
+            if (AutoNext)
             {
                 NextFile();
+                Play();
+            }
+            if (Repeating)
+            {
+                PrepareToPlay();
                 Play();
             }
         }
@@ -660,91 +661,94 @@ namespace Playlist
             if (MusicFiles.Length > 0)
                 for (int i = 0; i < MusicFiles.Length; i++)
                     if (File.Exists(MusicFiles[i]))
-                {
-                    // Tạo Panel cho một bài hát và các thành phần của nó
-                    Panel MusicPanel = new Panel();
-                    PictureBox ImageMusic = new PictureBox();
-                    PictureBox PlayButton = new PictureBox();
-                    Label MusicName = new Label();
-                    Label TotalTime = new Label();
-                    //
-                    // Hình đại diện bài hát
-                    //
-                    ImageMusic.Name = "ImageMusic";
-                    ImageMusic.Size = new Size(46, 46);
-                    ImageMusic.SizeMode = PictureBoxSizeMode.Zoom;
-                    ImageMusic.Tag = MusicFiles[i];
-                    if (File.Exists(Path.Combine(FilesPath, Path.GetFileNameWithoutExtension(ImageMusic.Tag.ToString()))))
-                        ImageMusic.Image = Image.FromFile(Path.Combine(FilesPath, Path.GetFileNameWithoutExtension(ImageMusic.Tag.ToString())));
-                    else ImageMusic.Image = (this.Parent as dynamic).Icon.ToBitmap();
-                    ImageMusic.MouseClick += ImageMusic_RightClick;
-                    //
-                    // Nút PlayPause 
-                    //
-                    PlayButton.Name = "PlayButton";
-                    PlayButton.Size = new Size(20, 20);
-                    PlayButton.Cursor = Cursors.Hand;
-                    PlayButton.SizeMode = PictureBoxSizeMode.Zoom;
-                    if (PlayerDevice.CurrentNode.FileName == MusicFiles[i] && PlayerDevice.IsPlaying)
-                        PlayButton.Image = Properties.Resources.PauseThis;
-                    else
-                        PlayButton.Image = Properties.Resources.PlayThis;
-                    PlayButton.Tag = false; // true là đang phát, false là dừng
-                    PlayButton.Click += (sender, e) => PlayButton_Click(((sender as PictureBox).Parent as dynamic).Name);
-                    //
-                    // Tên bài hát
-                    //
-                    MusicName.Name = "MusicName";
-                    MusicName.Text = (i + 1) + ". " + Path.GetFileNameWithoutExtension(MusicFiles[i]);
-                    MusicName.Font = new Font("Roboto", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                    MusicName.ForeColor = Color.White;
-                    MusicName.AutoSize = false;
-                    MusicName.Size = new Size(150, 50);
-                    MusicName.Cursor = Cursors.Hand;
-                    MusicName.TextAlign = ContentAlignment.MiddleLeft;
-                    MusicName.Click += (sender, e) => PlayButton_Click(((sender as Label).Parent as dynamic).Name);
-                    //
-                    // Thời lượng bài hát
-                    //
-                    TotalTime.Name = "TotalTime";
-                    TotalTime.Size = new Size(50, 50);
-                    TotalTime.Font = new Font("Roboto", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                    {
+                        // Tạo Panel cho một bài hát và các thành phần của nó
+                        Panel MusicPanel = new Panel();
+                        PictureBox ImageMusic = new PictureBox();
+                        PictureBox PlayButton = new PictureBox();
+                        Label MusicName = new Label();
+                        Label TotalTime = new Label();
+                        //
+                        // Hình đại diện bài hát
+                        //
+                        ImageMusic.Name = "ImageMusic";
+                        ImageMusic.Size = new Size(46, 46);
+                        ImageMusic.SizeMode = PictureBoxSizeMode.Zoom;
+                        ImageMusic.Tag = MusicFiles[i];
+                        if (File.Exists(Path.Combine(FilesPath, Path.GetFileNameWithoutExtension(ImageMusic.Tag.ToString()))))
+                            ImageMusic.Image = Image.FromFile(Path.Combine(FilesPath, Path.GetFileNameWithoutExtension(ImageMusic.Tag.ToString())));
+                        else ImageMusic.Image = (this.Parent as dynamic).Icon.ToBitmap();
+                        ImageMusic.MouseClick += ImageMusic_RightClick;
+                        //
+                        // Nút PlayPause 
+                        //
+                        PlayButton.Name = "PlayButton";
+                        PlayButton.Size = new Size(20, 20);
+                        PlayButton.Cursor = Cursors.Hand;
+                        PlayButton.SizeMode = PictureBoxSizeMode.Zoom;
+                        if (PlayerDevice.CurrentNode.FileName == MusicFiles[i] && PlayerDevice.IsPlaying)
+                            PlayButton.Image = Properties.Resources.PauseThis;
+                        else
+                            PlayButton.Image = Properties.Resources.PlayThis;
+                        PlayButton.Tag = false; // true là đang phát, false là dừng
+                        PlayButton.Click += (sender, e) => PlayButton_Click(((sender as PictureBox).Parent as dynamic).Name);
+                        //
+                        // Tên bài hát
+                        //
+                        MusicName.Name = "MusicName";
+                        MusicName.Text = (i + 1) + ". " + Path.GetFileNameWithoutExtension(MusicFiles[i]);
+                        MusicName.Font = new Font("Roboto", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        MusicName.ForeColor = Color.White;
+                        MusicName.AutoSize = false;
+                        MusicName.Size = new Size(150, 50);
+                        MusicName.Cursor = Cursors.Hand;
+                        MusicName.TextAlign = ContentAlignment.MiddleLeft;
+                        MusicName.Click += (sender, e) => PlayButton_Click(((sender as Label).Parent as dynamic).Name);
+                        //
+                        // Thời lượng bài hát
+                        //
+                        TotalTime.Name = "TotalTime";
+                        TotalTime.Size = new Size(50, 50);
+                        TotalTime.Font = new Font("Roboto", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                         AudioFileReader ReadTime = new AudioFileReader(MusicFiles[i]);
                         TotalTime.Text = ReadTime.TotalTime.TotalHours >= 1 ?
                             string.Format("{0:h\\:mm\\:ss}", ReadTime.TotalTime) :
                             string.Format("{0:m\\:ss}", ReadTime.TotalTime);
-                    TotalTime.TextAlign = ContentAlignment.MiddleCenter;
-                    TotalTime.ForeColor = Color.White;
-                    TotalTime.AutoSize = false;
-                    //
-                    // Cài đặt thuộc tính của Panel bài hát
-                    //
-                    MusicPanel.Name = MusicFiles[i];
-                    MusicPanel.AllowDrop = true;
-                    MusicPanel.Tag = MusicFiles[i];
-                    MusicPanel.Size = new Size(420, 50);
-                    MusicPanel.AutoSize = false;
-                    MusicPanel.Controls.Add(ImageMusic);
-                    MusicPanel.Controls.Add(PlayButton);
-                    MusicPanel.Controls.Add(MusicName);
-                    MusicPanel.Controls.Add(TotalTime);
-                    if (i % 2 != 0)
-                        MusicPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(14)))), ((int)(((byte)(14)))));
-                    else
-                        MusicPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
-                    MusicPanel.MouseDown += MusicPanel_MouseDown;
-                    MusicPanel.MouseMove += MusicPanel_MouseMove;
-                    MusicPanel.MouseUp += MusicPanel_MouseUp;
+                        TotalTime.TextAlign = ContentAlignment.MiddleCenter;
+                        TotalTime.ForeColor = Color.White;
+                        TotalTime.AutoSize = false;
+                        TotalTime.MouseDown += MusicPanel_MouseDown;
+                        TotalTime.MouseUp += MusicPanel_MouseUp;
+                        TotalTime.MouseMove += MusicPanel_MouseMove;
+                        //
+                        // Cài đặt thuộc tính của Panel bài hát
+                        //
+                        MusicPanel.Name = MusicFiles[i];
+                        MusicPanel.AllowDrop = true;
+                        MusicPanel.Tag = MusicFiles[i];
+                        MusicPanel.Size = new Size(420, 50);
+                        MusicPanel.AutoSize = false;
+                        MusicPanel.Controls.Add(ImageMusic);
+                        MusicPanel.Controls.Add(PlayButton);
+                        MusicPanel.Controls.Add(MusicName);
+                        MusicPanel.Controls.Add(TotalTime);
+                        if (i % 2 != 0)
+                            MusicPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(14)))), ((int)(((byte)(14)))));
+                        else
+                            MusicPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
+                        MusicPanel.MouseDown += MusicPanel_MouseDown;
+                        MusicPanel.MouseMove += MusicPanel_MouseMove;
+                        MusicPanel.MouseUp += MusicPanel_MouseUp;
 
-                    ImageMusic.Location = new Point(15, 2);
-                    PlayButton.Location = new Point(110, 15);
-                    MusicName.Location = new Point(175, 0);
-                    TotalTime.Location = new Point(350, 0);
+                        ImageMusic.Location = new Point(15, 2);
+                        PlayButton.Location = new Point(110, 15);
+                        MusicName.Location = new Point(175, 0);
+                        TotalTime.Location = new Point(350, 0);
 
-                    if (Current == null) Current = MusicPanel;
+                        if (Current == null) Current = MusicPanel;
 
-                    this.Controls.Add(MusicPanel);
-                }
+                        this.Controls.Add(MusicPanel);
+                    }
         }
 
         // Sự kiện nhấn chuột phải vào hình ảnh đại diện bài hát
@@ -813,18 +817,25 @@ namespace Playlist
             };
         }
 
+        private bool WheelFlag = true;
         // Sự kiện lăn nút lăn chuột trên danh sách
         private void MusicListPanel_Wheel(object sender, MouseEventArgs e)
         {
             if (e.Delta > 0) this.Location = new Point(this.Location.X, this.Location.Y + 10);
             else if (e.Delta < 0) this.Location = new Point(this.Location.X, this.Location.Y - 10);
 
-            if (UpperLimit != 0 && UpperLimit > this.Location.Y + this.Height - 100)
-                while (this.Location.Y < UpperLimit)
-                    this.Location = new Point(this.Location.X, this.Location.Y + 1);
-            if (LowerLimit != 0 && LowerLimit < this.Location.Y + 50)
-                while (this.Location.Y + this.Height > LowerLimit)
-                    this.Location = new Point(this.Location.X, this.Location.Y - 1);
+            Thread WheelBack = new Thread(() =>
+            {
+                WheelFlag = false;
+                if (UpperLimit != 0 && UpperLimit > this.Location.Y + this.Height - 100)
+                    while (this.Location.Y < UpperLimit)
+                        this.Location = new Point(this.Location.X, this.Location.Y + 1);
+                if (LowerLimit != 0 && LowerLimit < this.Location.Y + 50)
+                    while (this.Location.Y + this.Height > LowerLimit)
+                        this.Location = new Point(this.Location.X, this.Location.Y - 1);
+                WheelFlag = true;
+            });
+            if (WheelFlag) WheelBack.Start();
         }
 
         private bool Flag; // "Cờ" khi mà sự kiện nhấn chuột được bắt thì sự kiện chuột di chuyển mới được thực hiện
@@ -861,7 +872,7 @@ namespace Playlist
                     PlayerDevice.StopAndDisposePlayerDevice();
 
                 // Xoá các tệp liên quan đến bài hát
-                File.Delete(MusicPanel.Name);
+                File.Delete(MusicPanel.Tag.ToString());
                 PictureBox DisposeImage = MusicPanel.Controls["ImageMusic"] as PictureBox;
                 DisposeImage.Image.Dispose();
                 ChoosingAnotherMusic?.Invoke(this, EventArgs.Empty);
@@ -872,7 +883,7 @@ namespace Playlist
                 }
                 catch { }
 
-                MusicFiles = Directory.GetFiles(FilesPath).Where(File => Path.GetExtension(File).Equals(".mp3", StringComparison.OrdinalIgnoreCase)).ToArray(); ;
+                MusicFiles = MusicFiles.Where(FileName => FileName != MusicPanel.Tag.ToString()).ToArray();
                 PlayerDevice.FromArray(MusicFiles);
                 this.InitializeComponent();
 
