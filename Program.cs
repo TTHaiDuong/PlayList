@@ -679,6 +679,8 @@ namespace Playlist
                             ImageMusic.Image = Image.FromFile(Path.Combine(FilesPath, Path.GetFileNameWithoutExtension(ImageMusic.Tag.ToString())));
                         else ImageMusic.Image = (this.Parent as dynamic).Icon.ToBitmap();
                         ImageMusic.MouseClick += ImageMusic_RightClick;
+                        ImageMusic.MouseMove += ImageMusic_MouseMove;
+                        ImageMusic.MouseLeave += ImageMusic_MouseLeave;
                         //
                         // Nút PlayPause 
                         //
@@ -749,6 +751,34 @@ namespace Playlist
 
                         this.Controls.Add(MusicPanel);
                     }
+        }
+
+        private void ImageMusic_MouseMove(object sender, MouseEventArgs e)
+        {
+            PictureBox ImageMusic = sender as PictureBox;
+            Label Guide = new Label
+            {
+                Name = "Guide",
+                AutoSize = true,
+                Text = "Chuột phải để cập nhật ảnh",
+                ForeColor = Color.White,
+                Font = new Font("Roboto", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0))),
+                Location = this.PointToClient(new Point(Cursor.Position.X, Cursor.Position.Y)),
+            };
+            if (!ImageMusic.Parent.Controls.Contains(ImageMusic.Parent.Controls["Guide"])) 
+                ImageMusic.Parent.Controls.Add(Guide);
+
+            Label SetPosition = ImageMusic.Parent.Controls["Guide"] as Label;
+            Point Point = ImageMusic.Parent.PointToClient(Cursor.Position);
+            if (Math.Abs(SetPosition.Location.X - Point.X) > 5 || Math.Abs(SetPosition.Location.Y - Point.Y) > 5)
+            SetPosition.Location = Point;
+            Guide.BringToFront();
+        }
+
+        private void ImageMusic_MouseLeave(object sender, EventArgs e)
+        {
+            PictureBox ImageMusic = sender as PictureBox;
+            ImageMusic.Parent.Controls.Remove(ImageMusic.Parent.Controls["Guide"]);
         }
 
         // Sự kiện nhấn chuột phải vào hình ảnh đại diện bài hát
