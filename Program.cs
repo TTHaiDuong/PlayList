@@ -860,7 +860,7 @@ namespace Playlist
                 if (UpperLimit != 0 && UpperLimit > this.Location.Y + this.Height - 100)
                     while (this.Location.Y < UpperLimit)
                         this.Location = new Point(this.Location.X, this.Location.Y + 1);
-                if (LowerLimit != 0 && LowerLimit < this.Location.Y + 50)
+                if (LowerLimit != 0 && LowerLimit < this.Location.Y + 100)
                     while (this.Location.Y + this.Height > LowerLimit)
                         this.Location = new Point(this.Location.X, this.Location.Y - 1);
                 WheelFlag = true;
@@ -877,6 +877,23 @@ namespace Playlist
             {
                 this.Location = new Point(this.Location.X, Cursor.Position.Y - CursorLocationY + this.Location.Y);
                 MusicListPanel_Wheel(sender, new MouseEventArgs(MouseButtons.Left, 0, 0, 0, 0));
+                if (Trash.Bounds.Contains(Trash.Parent.PointToClient(Cursor.Position)) && sender is Panel GuideRemove)
+                {
+                    Label Guide = new Label
+                    {
+                        Name = "Guide",
+                        AutoSize = true,
+                        Text = "Xoá " + Path.GetFileNameWithoutExtension(GuideRemove.Name),
+                        ForeColor = Color.White,
+                        Font = new Font("Roboto", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0))),
+                        Location = this.PointToClient(new Point(Cursor.Position.X, Cursor.Position.Y)),
+                    };
+                    this.Parent.Controls.Add(Guide);
+                    Guide.Location = new Point(Trash.Location.X, Trash.Location.Y + Trash.Height);
+                    Guide.BringToFront();
+                }
+                else this.Parent.Controls.Remove(this.Parent.Controls["Guide"]);
+
             }
             CursorLocationY = Cursor.Position.Y;
         }
@@ -893,6 +910,7 @@ namespace Playlist
         // Xử lý sự kiện khi thả nút chuột sau khi nhấn nút vào một panel chứa thông tin bài hát
         private void MusicPanel_MouseUp(object sender, MouseEventArgs e)
         {
+            this.Parent.Controls.Remove(this.Parent.Controls["Guide"]);
             Panel MusicPanel = sender as Panel;
             // Xử lý khi con trỏ chuột nằm bên trên PictureBox Trash (thùng rác) 
             if (Trash.Bounds.Contains(Trash.Parent.PointToClient(Cursor.Position)))
