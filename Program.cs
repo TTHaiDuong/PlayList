@@ -654,7 +654,6 @@ namespace Playlist
         /// </summary>
         public void InitializeComponent()
         {
-
             if (Trash != null) this.Trash.Visible = false;
             this.Controls.Clear();
 
@@ -888,12 +887,12 @@ namespace Playlist
                         Font = new Font("Roboto", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0))),
                         Location = this.PointToClient(new Point(Cursor.Position.X, Cursor.Position.Y)),
                     };
-                    this.Parent.Controls.Add(Guide);
+                    if (!this.Parent.Controls.ContainsKey("Guide"))
+                        this.Parent.Controls.Add(Guide);
                     Guide.Location = new Point(Trash.Location.X, Trash.Location.Y + Trash.Height);
                     Guide.BringToFront();
                 }
                 else this.Parent.Controls.Remove(this.Parent.Controls["Guide"]);
-
             }
             CursorLocationY = Cursor.Position.Y;
         }
@@ -910,7 +909,7 @@ namespace Playlist
         // Xử lý sự kiện khi thả nút chuột sau khi nhấn nút vào một panel chứa thông tin bài hát
         private void MusicPanel_MouseUp(object sender, MouseEventArgs e)
         {
-            this.Parent.Controls.Remove(this.Parent.Controls["Guide"]);
+            Flag = false;
             Panel MusicPanel = sender as Panel;
             // Xử lý khi con trỏ chuột nằm bên trên PictureBox Trash (thùng rác) 
             if (Trash.Bounds.Contains(Trash.Parent.PointToClient(Cursor.Position)))
@@ -943,7 +942,7 @@ namespace Playlist
                 }
             }
             Trash.Visible = false;
-            Flag = false;
+            this.Parent.Controls.Remove(this.Parent.Controls["Guide"]);
         }
     }
 }

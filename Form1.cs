@@ -75,6 +75,7 @@ namespace Playlist
         // Khi bắt đầu phát bài hát mới
         private void StartNewMusic(object sender, EventArgs e)
         {
+            PlayMusicList.Volume = SpeakerBar.Value;
             MusicBar.Maximum = PlayMusicList.TotalTime;
             MusicBar.Value = 0;
 
@@ -100,8 +101,8 @@ namespace Playlist
         // Thiết đặt hình ảnh hiển thị khi chọn một bài hát mới.
         private void MusicList_ChoosingAnotherMusic(object sender, EventArgs e)
         {
-            ImageMusicPlaying1.Image = null;
-            ImageMusicPlaying2.Image = null;
+            ImageMusicPlaying1.Image?.Dispose();
+            ImageMusicPlaying2.Image?.Dispose();
             if (File.Exists(Path.Combine(MusicList.FilesPath, Path.GetFileNameWithoutExtension((MusicList.Current.Controls["ImageMusic"] as PictureBox).Tag.ToString()))))
             {
                 try
@@ -241,24 +242,28 @@ namespace Playlist
             return regex.Replace(NormalizedText, string.Empty).Normalize(NormalizationForm.FormC);
         }
 
+        private bool SearchFlag = true;
         // Tìm kiếm nhạc
         private void SearchBox_TextChanged(object sender, EventArgs e)
         {
-            string[] TempMusicFiles = new string[PlayMusicList.Count];
-            if (MusicList.MusicFiles.Length == PlayMusicList.Count) TempMusicFiles = MusicList.MusicFiles;
+            if (SearchFlag)
+            {
+                SearchFlag = false;
+                string[] TempMusicFiles = MusicList.MusicFiles;
 
-            // Chuẩn hoá ký tự tìm kiếm sang toàn bộ ký tự chữ thường, không dấu tiếng Việt
-            string SearchTerm = RemoveDiacritics(SearchBox.Text.ToLower().Trim());
+                // Chuẩn hoá ký tự tìm kiếm sang toàn bộ ký tự chữ thường, không dấu tiếng Việt
+                string SearchTerm = RemoveDiacritics(SearchBox.Text.ToLower().Trim());
 
-            List<string> Result = new List<string>();
-            foreach (string FileName in TempMusicFiles)
-                if (!string.IsNullOrEmpty(FileName) && RemoveDiacritics(FileName.ToLower().Trim()).Contains(SearchTerm)) Result.Add(FileName);
+                List<string> Result = new List<string>();
+                foreach (string FileName in TempMusicFiles)
+                    if (!string.IsNullOrEmpty(FileName) && RemoveDiacritics(FileName.ToLower().Trim()).Contains(SearchTerm)) Result.Add(FileName);
 
-            MusicList.MusicFiles = Result.ToArray();
-            MusicList.InitializeComponent();
+                MusicList.MusicFiles = Result.ToArray();
+                MusicList.InitializeComponent();
 
-            MusicList.MusicFiles = TempMusicFiles;
-            if (string.IsNullOrEmpty(SearchBox.Text)) MusicList.InitializeComponent();
+                MusicList.MusicFiles = TempMusicFiles;
+                SearchFlag = true;
+            }
         }
 
         // Nhấn chuột phải vào ảnh bìa app (tính năng đã dừng phát triển)
